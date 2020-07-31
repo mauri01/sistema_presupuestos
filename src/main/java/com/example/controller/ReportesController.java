@@ -27,13 +27,16 @@ public class ReportesController {
     private VentaService ventaService;
 
     Date date = new Date();
+    DateFormat hourdateFormat = new SimpleDateFormat("MM");
+    DateFormat hourdateFormatAnio = new SimpleDateFormat("yyyy");
 
     @RequestMapping(value="/admin/reportes", method = RequestMethod.GET)
     public ModelAndView reportes() {
-        DateFormat hourdateFormat = new SimpleDateFormat("MM");
         String fechaMes = hourdateFormat.format(date);
-        float gastosTotales = reportCompras(Integer.parseInt(fechaMes) - 1);
-        float gananciasTotales = reportVentas(Integer.parseInt(fechaMes) - 1);
+        String fechaAnio = hourdateFormatAnio.format(date);
+
+        float gastosTotales = reportCompras(Integer.parseInt(fechaMes) - 1, Integer.parseInt(fechaAnio));
+        float gananciasTotales = reportVentas(Integer.parseInt(fechaMes) - 1, Integer.parseInt(fechaAnio));
         float balance = gananciasTotales - gastosTotales;
 
         ModelAndView modelAndView = new ModelAndView();
@@ -44,16 +47,17 @@ public class ReportesController {
         return modelAndView;
     }
 
-    @RequestMapping(value="/report/compras/{mes}", method = RequestMethod.GET)
+    @RequestMapping(value="/report/compras/{mes}/{ano}", method = RequestMethod.GET)
     @ResponseBody
-    public float reportCompras(@PathVariable("mes") int mes){
+    public float reportCompras(@PathVariable("mes") int mes, @PathVariable("ano") int anio){
         List<Compra> listaCompras = compraService.findAll();
         float total = 0;
         try{
             for (Compra compra : listaCompras){
                 Date hourdateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").parse(compra.getFechaIngreso());
                 int mesCompra = hourdateFormat.getMonth();
-                if(mes == mesCompra){
+                int anioCompra = Integer.parseInt(hourdateFormatAnio.format(hourdateFormat));
+                if(mes == mesCompra && anioCompra == anio){
                     total = total + compra.getPrecioTotal();
                 }
             }
@@ -65,16 +69,17 @@ public class ReportesController {
         
     }
 
-    @RequestMapping(value="/report/ventas/{mes}", method = RequestMethod.GET)
+    @RequestMapping(value="/report/ventas/{mes}/{ano}", method = RequestMethod.GET)
     @ResponseBody
-    public float reportVentas(@PathVariable("mes") int mes){
+    public float reportVentas(@PathVariable("mes") int mes, @PathVariable("ano") int anio){
         List<Venta> listaVentas = ventaService.findAll();
         float total = 0;
         try{
             for (Venta venta : listaVentas){
                 Date hourdateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").parse(venta.getFechaVenta());
                 int mesCompra = hourdateFormat.getMonth();
-                if(mes == mesCompra){
+                int anioCompra = Integer.parseInt(hourdateFormatAnio.format(hourdateFormat));
+                if(mes == mesCompra && anioCompra == anio){
                     total = total + (venta.getCantidad() * venta.getPrecio());
                 }
             }

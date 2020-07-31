@@ -24,11 +24,14 @@
   <script type="text/javascript">
       var bar_data;
       var bar_data2;
+      var fecha = new Date();
+      var ano = fecha.getFullYear();
+
       function getAllCompras() {
           var arrayCompras = new Array(12);
           for (var i = 0; i < 12; i++) {
               $.ajax({
-                  url: "http://localhost:8284/report/compras/"+i,
+                  url: "http://localhost:8284/report/compras/"+i+"/"+ano,
                   method: "GET",
                   contentType: "application/json",
                   dataType: 'json',
@@ -51,10 +54,12 @@
       //------ funcion Ventas
 
       function getAllVentas() {
+          var fecha = new Date();
+          var ano = fecha.getFullYear();
           var arrayVenta= new Array(12);
           for (var i = 0; i < 12; i++) {
               $.ajax({
-                  url: "http://localhost:8284/report/ventas/"+i,
+                  url: "http://localhost:8284/report/ventas/"+i+"/"+ano,
                   method: "GET",
                   contentType: "application/json",
                   dataType: 'json',
