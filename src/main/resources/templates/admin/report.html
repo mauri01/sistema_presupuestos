@@ -37,7 +37,6 @@
                   dataType: 'json',
                   async: false,
                   success: function (result) {
-                      console.log("Array"+i+"Result"+result);
                       arrayCompras[i]=result;
                   }
               });
@@ -65,7 +64,6 @@
                   dataType: 'json',
                   async: false,
                   success: function (result) {
-                      console.log("Array"+i+"Result"+result);
                       arrayVenta[i]=result;
                   }
               });
@@ -223,11 +221,13 @@
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>PDF</h3>
-              <p>Proximamente</p>
+              <h3>Documentos</h3>
+              <p style='cursor: pointer' data-toggle="modal" data-target="#modal-default">
+                Descargar
+              </p>
             </div>
             <div class="icon">
-              <i class="fa fa-copy"></i>
+              <i class="fa fa-print"></i>
             </div>
           </div>
         </div>
@@ -338,6 +338,48 @@
       </div>
     </section>
 
+    <div class="modal fade" id="modal-default">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Descargar PDF/EXCEL</h4>
+          </div>
+          <div class="modal-body">
+            <div>
+              <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="fa fa-file-excel-o"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-number">Reportes en EXCEL</span>
+                  <span class="info-box-text">Ventas y Compras Realizadas, Stock Completo</span>
+                  <a href="http://localhost:8284/admin/document/descargar/0">Descargar</a >
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <div>
+              <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="fa fa-file-pdf-o"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-number">Reportes en PDF</span>
+                  <span class="info-box-text">Ventas y Compras Realizadas, Stock Completo</span>
+                  <a href="http://localhost:8284/admin/document/descargar/1">Descargar</a>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+
   </div>
   <!-- /.content-wrapper -->
   <div th:replace="fragments/mainView :: footer"></div>
@@ -346,8 +388,6 @@
 </div>
 <!-- ./wrapper -->
 <SCRIPTS><!-- MAIN SCRIPTS-->
-
-
   <!-- Bootstrap 3.3.7 -->
   <script href="../js/bootstrap/dist/js/bootstrap.min.js" th:src="@{/js/bootstrap/dist/js/bootstrap.min.js}"
           th:inline="javascript"/>

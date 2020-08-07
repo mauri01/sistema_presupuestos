@@ -100,8 +100,8 @@
 
                                 <div class="form-group">
                                     <label>Artículo</label>
-                                    <select class="form-control select2" th:required="required" th:field="*{articleId}" style="width: 100%;">
-                                        <option th:each="articles : ${articles}" th:name="locationId"
+                                    <select class="form-control select2" id="selectedArticulo" th:required="required" th:field="*{articleId}" style="width: 100%;">
+                                        <option th:each="articles : ${articles}" th:name="${articles.id}" th:id="${articles.id}"
                                                 th:value="${articles.id}" th:text="${articles.nombre}"></option>
                                     </select>
                                 </div>
@@ -156,6 +156,7 @@
                                 <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>
                         </form>
+                        <input type="text" type="hidden" id=idSelected th:value="${idSelected} ?: 0">
                     </div>
                 </div>
             </div>
@@ -175,6 +176,22 @@
 
     <script type="text/javascript">
         $.widget.bridge('uibutton', $.ui.button);
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log("asd");
+            var id = document.getElementById("idSelected").value;
+
+
+            $('#selectedArticulo').find('option').each(function(i,e){
+                console.log("i="+i+"e="+$(e).val());
+                if($(e).val() == id){
+                    console.log("selected")
+                    $('#selectedArticulo').prop('selectedIndex',i);
+                }
+            });
+        });
     </script>
     <!-- Bootstrap 3.3.7 -->
     <script href="../js/bootstrap/dist/js/bootstrap.min.js" th:src="@{/js/bootstrap/dist/js/bootstrap.min.js}"

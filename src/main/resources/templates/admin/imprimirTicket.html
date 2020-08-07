@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <style>
+        * {
+            font-size: 12px;
+            font-family: 'Times New Roman';
+        }
+
+        td,
+        th,
+        tr,
+        table {
+            border-top: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        td.producto,
+        th.producto {
+            width: 75px;
+            max-width: 75px;
+        }
+
+        td.cantidad,
+        th.cantidad {
+            width: 40px;
+            max-width: 40px;
+            word-break: break-all;
+        }
+
+        td.precio,
+        th.precio {
+            width: 40px;
+            max-width: 40px;
+            word-break: break-all;
+        }
+
+        .centrado {
+            text-align: center;
+            align-content: center;
+        }
+
+        .ticket {
+            width: 155px;
+            max-width: 155px;
+        }
+
+        img {
+            max-width: inherit;
+            width: inherit;
+        }
+    </style>
+</head>
+<body>
+<div class="ticket">
+    <!--<img
+            src="https://yt3.ggpht.com/-3BKTe8YFlbA/AAAAAAAAAAI/AAAAAAAAAAA/ad0jqQ4IkGE/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"
+            alt="Logotipo">-->
+    <p class="centrado">*****
+    <br>***********</p>
+    <p class="centrado">Parzibyte's blog
+        <br>New New York
+        <br th:text="${fecha}"></p>
+    <p class="centrado">***********
+    <br>*****</p>
+    <table>
+        <thead>
+        <tr>
+            <th class="cantidad">CANT</th>
+            <th class="producto">PRODUCTO</th>
+            <th class="precio">$$</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="object : ${articles}">
+            <td class="cantidad" th:text="${object.cantidad}"></td>
+            <td class="producto" th:text="${object.nameArticle}"></td>
+            <td class="precio Unit." th:text="${object.precioArticle}"></td>
+        </tr>
+        <tr>
+            <td class="cantidad"></td>
+            <td class="producto">TOTAL</td>
+            <td class="precio" th:text="'$'+${totalVenta}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p class="centrado">¡GRACIAS POR SU COMPRA!
+
+        <br>
+    <button class="oculto-impresion" onclick="imprimir()">Imprimir</button>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+    function imprimir() {
+        window.print();
+    }
+</script>

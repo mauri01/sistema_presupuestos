@@ -7,6 +7,7 @@ import com.example.service.CompraService;
 import com.example.service.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,6 +48,18 @@ public class StockController {
         modelAndView.setViewName("admin/stockList");
 
         modelAndView.addObject("articles",articleService.findAllArticle());
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/admin/cargarstock/{id}", method = RequestMethod.GET)
+    public ModelAndView cargarstocks(@PathVariable("id") int id){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/stock");
+
+        modelAndView.addObject("articles",articleService.findAllArticle());
+        modelAndView.addObject("proveedores",proveedorService.findAll());
+        modelAndView.addObject("compra",new Compra());
+        modelAndView.addObject("idSelected",id);
         return modelAndView;
     }
 

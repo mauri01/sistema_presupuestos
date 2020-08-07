@@ -91,8 +91,8 @@
                                     <td th:text="${object.stock}"></td>
                                     <td th:text="${object.precioVenta}"></td>
                                     <td>
-                                        <a th:href="@{${'/admin/stock'}}" data-toggle="tooltip" style="padding-right: 10px;" title="Cargar Stock" class="fa  fa-plus"></a>
-                                        <button type="button" class="btn btn-default" th:id="${object.id}" onclick="myFunction(this.id)" data-toggle="modal" data-target="#modal-default">
+                                        <a th:href="@{${'/admin/cargarstock/'+object.id}}" data-toggle="tooltip" style="padding-right: 10px;" title="Cargar Stock" class="fa  fa-plus"></a>
+                                        <button type="button" class="btn btn-default" th:id="${object.id}" title="Cambiar Precio" onclick="myFunction(this.id)" data-toggle="modal" data-target="#modal-default">
                                             <i class="fa fa-dollar"></i>
                                         </button>
                                     </td>

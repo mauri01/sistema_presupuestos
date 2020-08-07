@@ -3,14 +3,13 @@ package com.example.controller;
 import com.example.model.Article;
 import com.example.model.Venta;
 import com.example.model.VentasMesModel;
+import com.example.model.DetalleVentaPedido;
 import com.example.service.ArticleService;
 import com.example.service.ProveedorService;
 import com.example.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.text.DateFormat;
@@ -20,9 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Controller
 public class VentasController {
@@ -45,6 +42,8 @@ public class VentasController {
         String messageVenta = "";
         int countVentas = 0;
         String stockDisponible = "";
+        float totalVenta = 0;
+
 
         ModelAndView modelAndView = new ModelAndView();
 
@@ -60,6 +59,7 @@ public class VentasController {
                 try {
                     idPedido = registrarCompra(idArt, precio, cantidad, idPedido, fecha);
                     articleService.descontarStock(idArt, cantidad);
+                    totalVenta = totalVenta + (Float.parseFloat(precio)*Integer.parseInt(cantidad));
                 } catch (Exception e) {
                     messageVenta = "Surgio un error al Cargar la venta Intente de Nuevo";
                     modelAndView.addObject("messageVenta", messageVenta);
@@ -88,6 +88,8 @@ public class VentasController {
         modelAndView.addObject("messageVenta", messageVenta);
         modelAndView.addObject("countVentas", countVentas);
         modelAndView.addObject("stockDisponible", stockDisponible);
+        modelAndView.addObject("totalVentaAmostrar",totalVenta);
+        modelAndView.addObject("idPedido",idPedido);
         return modelAndView;
     }
 
@@ -201,5 +203,27 @@ public class VentasController {
         ventasMesModel.setFechaVenta(fechaVenta);
         ventasMesModel.setCantidadArticulos(cantidadArticulos);
         ventasTotales.add(ventasMesModel);
+    }
+
+    @RequestMapping(value="/venta/pedido/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<DetalleVentaPedido> getArticlesByPedido(@PathVariable("id") String id){
+        List<Venta> ventaPedido = ventaService.findAll().stream()
+                .filter(venta -> venta.getPedido() == Integer.valueOf(id))
+                .collect(Collectors.toList());
+
+        List<DetalleVentaPedido> ventaPedidos = new ArrayList<>();
+
+        for(Venta venta : ventaPedido){
+            DetalleVentaPedido pedidoDetalle = new DetalleVentaPedido();
+            Article article = articleService.findbyId(venta.getArticle());
+            float precioArticle = venta.getPrecio();
+            int cantidad = venta.getCantidad();
+            pedidoDetalle.setCantidad(cantidad);
+            pedidoDetalle.setNameArticle(article.getNombre());
+            pedidoDetalle.setPrecioArticle(precioArticle);
+            ventaPedidos.add(pedidoDetalle);
+        }
+        return ventaPedidos;
     }
 }

@@ -38,6 +38,7 @@
 
         <!-- Google Font -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
     </STYLES>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -186,12 +187,11 @@
 
                             <div class="box-footer">
                                 <a class="product-title">TOTAL A PAGAR
-                                    <span id="totalPago" class="label label-success pull-right">$ 0</span>
+                                    <span style="font-size: 15px !important;" id="totalPago" class="label label-success pull-right">$ 0</span>
                                 </a>
                             </div>
 
                         </div>
-
                         <form autocomplete="off" th:action="@{/ventas}" method="post">
                             <input id="totalApagarVenta" type="hidden" name="sourceText">
                             <div class="box-footer">
@@ -200,12 +200,74 @@
                         </form>
                         <!-- /.box-body -->
                     </div>
+                    <input type="hidden" id=totalVentaAmostrar th:value="${totalVentaAmostrar} ?: 0">
+                    <input type="hidden" id=idPedido th:value="${idPedido} ?: 0">
                     <!-- /.box -->
                 </div>
                 <!-- /.col (right) -->
             </div>
 
         </section>
+
+        <div class="modal fade" id="modal-default">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">FINALIZAR VENTA</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <div class="info-box">
+                                <span class="info-box-icon bg-green"><i class="fa fa-dollar"></i></span>
+
+                                <div class="info-box-content">
+                                    <span style="font-size: 35px !important;" class="info-box-number" th:text="${totalVentaAmostrar} ?: 0"></span>
+                                    <span class="info-box-text">PAGO TOTAL</span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <div class="form-group">
+                                <label>Cliente paga con:</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-dollar"></i>
+                                    </div>
+                                    <input th:id="pagaCon" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Realizar Descuento:</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-dollar"></i>
+                                    </div>
+                                    <input th:id="descuento" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>El cambio es:</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-dollar"></i>
+                                    </div>
+                                    <input th:id="cambio" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background-color: #0a0a0a !important;">
+                        <button type="button" onclick="functionCambio()" class="btn btn-primary pull-right">CALCULAR CAMBIO</button>
+                        <button type="button" onclick="imprimirTicket()" class="btn btn-primary pull-left">Ticket</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
     </div>
     <div th:replace="fragments/mainView :: footer"></div>
 
@@ -214,11 +276,13 @@
 <!-- ./wrapper -->
 <SCRIPTS><!-- MAIN SCRIPTS-->
     <!-- jQuery 3 -->
+
     <script href="../js/jquery/dist/jquery.min.js" th:src="@{/js/jquery/dist/jquery.min.js}" th:inline="javascript"/>
     <script href="../js/jquery-ui/jquery-ui.min.js" th:src="@{/js/jquery-ui/jquery-ui.min.js}" th:inline="javascript"/>
 
     <script type="text/javascript">
         $.widget.bridge('uibutton', $.ui.button);
+
     </script>
 
     <script type="text/javascript">
@@ -271,7 +335,7 @@
                         totalApagar = totalApagar + total;
                         $("#menu").append('<div class="product-info">' +
                             '<a class="product-title" text="" > '+ nombre +
-                            '<span class="label label-warning pull-right">$'+total+'</span>' +
+                            '<span style="font-size: 15px !important;" class="label label-warning pull-right">$'+total+'</span>' +
                             '</a> ' +
                             '   <span class="product-description">'+cantidad+'*'+precio+' </span> ' +
                             '</div>');
@@ -298,9 +362,36 @@
              cantidad = "";
         });
 
-
     </script>
 
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            var valor = document.getElementById("totalVentaAmostrar").value;
+
+            if (valor > 0){
+                $('#modal-default').modal('show');
+            }
+        });
+
+        function functionCambio(){
+            var totalVentaAmostrar = document.getElementById("totalVentaAmostrar").value;
+            var pagaCon = document.getElementById("pagaCon").value;
+            var descuento = document.getElementById("descuento").value;
+
+            if(descuento > 0){
+                var precioCondescuento = parseFloat(totalVentaAmostrar) - parseFloat(descuento);
+                document.getElementById("cambio").value = (parseFloat(pagaCon) - parseFloat(precioCondescuento));
+            }else{
+                document.getElementById("cambio").value = (parseFloat(pagaCon) - parseFloat(totalVentaAmostrar));
+            }
+        }
+        
+        function imprimirTicket() {
+            var id = document.getElementById("idPedido").value;
+            window.open('http://localhost:8284/admin/document/ticket/imprimir/'+id, '_blank');
+            document.getElementById("idPedido").value = 0;
+        }
+    </script>
     <!-- Bootstrap 3.3.7 -->
     <script href="../js/bootstrap/dist/js/bootstrap.min.js" th:src="@{/js/bootstrap/dist/js/bootstrap.min.js}"
             th:inline="javascript"/>

@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface ProveedorRepository extends JpaRepository<Proveedor, Long> {
 
     Proveedor findByNumDocumento(String dni);
+
+    Proveedor findById(int dni);
 }

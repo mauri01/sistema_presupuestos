@@ -37,7 +37,8 @@
         <![endif]-->
 
         <!-- Google Font -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     </STYLES>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -82,11 +83,19 @@
                                     <th>Fecha Venta</th>
                                     <th>Cantidad Articulos</th>
                                     <th>Total Venta</th>
+                                    <th>Accion</th>
                                 </tr>
                                 <tr th:each="object : ${listaVentasTotales}">
                                     <td th:text="${object.fechaVenta}"></td>
                                     <td th:text="${object.cantidadArticulos}"></td>
                                     <td th:text="${object.ventaTotalPrecio}"></td>
+                                    <td>
+                                        <button title="Ver Pedido" type="button" class="btn btn-default" th:id="${object.idPedido}"
+                                                onclick="myFunction(this.id)" data-toggle="modal"
+                                                data-target="#modal-default">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -100,20 +109,25 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Cambiar Precio</h4>
+                            <h4 class="modal-title">DATOS DE PEDIDO</h4>
                         </div>
                         <div class="modal-body">
-                            <form autocomplete="off" th:action="@{/article/price}" method="post">
-                                <div class="form-group">
-                                    <label>Nuevo Precio de Venta</label>
-                                    <input type="text" name="precioVenta" th:required="required" class="form-control" id="precioVenta" >
-                                    <input type="hidden" name="idArticle" id="idArticle">
+                            <div class="box-body">
+                                <div class="table-responsive">
+                                    <table class="table no-margin" id="myTable">
+                                        <thead>
+                                        <tr>
+                                            <th>Nombre Articulo</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Unidad</th>
+                                            <th>Total Venta</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
                                 </div>
-
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Cargar</button>
-                                </div>
-                            </form>
+                                <!-- /.table-responsive -->
+                            </div>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -132,7 +146,25 @@
     <!-- jQuery 3 -->
     <script type="text/javascript">
         function myFunction(value) {
-            $('#idArticle').val(value);
+            $.ajax({
+                url: "http://localhost:8284/venta/pedido/" + value,
+                method: "GET",
+                contentType: "application/json",
+                dataType: 'json',
+                async: false,
+                success: function (result) {
+                    $("#myTable").find("tr:gt(0)").remove();
+                    for (var key in result) {
+                        if (result.hasOwnProperty(key)) {
+                            console.log(key, result[key]);
+                            $('#myTable tr:last').after('<tr></tr><td><a>' + result[key].nameArticle + '</a></td>' +
+                                '<td>' + result[key].cantidad + '</td>' +
+                                '<td><span class="label label-success">' + result[key].precioArticle + '</span></td>' +
+                                '<td><div class="sparkbar" data-color="#00a65a" data-height="20">' + result[key].cantidad * result[key].precioArticle + '</div></td></tr>');
+                        }
+                    }
+                }
+            });
         }
     </script>
     <script href="../js/jquery/dist/jquery.min.js" th:src="@{/js/jquery/dist/jquery.min.js}" th:inline="javascript"/>
@@ -156,7 +188,7 @@
     <script href="../js/demo.js" th:src="@{/js/demo.js}" th:inline="javascript"/>
 
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
 

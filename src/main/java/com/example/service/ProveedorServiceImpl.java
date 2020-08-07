@@ -21,6 +21,11 @@ public class ProveedorServiceImpl implements ProveedorService{
     }
 
     @Override
+    public Proveedor findbyId(int id){
+        return proveedorRepository.findById(id);
+    }
+
+    @Override
     public void saveProveedor(Proveedor proveedor){
         proveedorRepository.save(proveedor);
     }

@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ProveedorService {
     public Proveedor findbyDni(String numDocumento);
+    public Proveedor findbyId(int id);
     void saveProveedor(Proveedor proveedor);
 
     List<Proveedor> findAll();
