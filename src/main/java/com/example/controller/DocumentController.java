@@ -1,10 +1,7 @@
 package com.example.controller;
 
 import com.example.model.*;
-import com.example.service.ArticleService;
-import com.example.service.CompraService;
-import com.example.service.ProveedorService;
-import com.example.service.VentaService;
+import com.example.service.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -27,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -43,6 +41,9 @@ public class DocumentController {
 
     @Autowired
     private ProveedorService proveedorService;
+
+    @Autowired
+    NegocioService negocioService;
 
     public static int EXCEL = 0;
     public static int PDF = 1;
@@ -72,6 +73,14 @@ public class DocumentController {
         modelAndView.addObject("articles", detalleVentaPedidos);
         modelAndView.addObject("totalVenta", totalVenta);
         modelAndView.addObject("fecha", fecha);
+
+        Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
+        if (negocio.isPresent()){
+            modelAndView.addObject("negocio", negocio.get());
+        }else{
+            modelAndView.addObject("negocio", new Negocio());
+        }
+
         modelAndView.setViewName("admin/imprimirTicket");
         return modelAndView;
 

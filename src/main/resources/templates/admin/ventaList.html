@@ -88,7 +88,7 @@
                                 <tr th:each="object : ${listaVentasTotales}">
                                     <td th:text="${object.fechaVenta}"></td>
                                     <td th:text="${object.cantidadArticulos}"></td>
-                                    <td th:text="${object.ventaTotalPrecio}"></td>
+                                    <td th:text="'$ '+${object.ventaTotalPrecio}"></td>
                                     <td>
                                         <button title="Ver Pedido" type="button" class="btn btn-default" th:id="${object.idPedido}"
                                                 onclick="myFunction(this.id)" data-toggle="modal"
