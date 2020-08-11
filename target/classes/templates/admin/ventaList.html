@@ -147,7 +147,7 @@
     <script type="text/javascript">
         function myFunction(value) {
             $.ajax({
-                url: "http://localhost:8284/venta/pedido/" + value,
+                url: "http://"+location.hostname+":8284/venta/pedido/" + value,
                 method: "GET",
                 contentType: "application/json",
                 dataType: 'json',

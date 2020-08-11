@@ -136,7 +136,7 @@
                                 <select class="form-control select2" id="article" onChange="myFunction(this.options[this.selectedIndex].value)"  style="width: 100%;">
                                     <option>Seleccione Art</option>
                                     <option th:each="articles : ${articles}"
-                                            th:value="${articles.id}" th:text="${articles.nombre}"></option>
+                                            th:value="${articles.id+'_'+articles.codigoBarra}" th:text="${articles.nombre}"></option>
                                 </select>
                             </div>
 
@@ -237,7 +237,7 @@
                                     <input th:id="pagaCon" type="text" class="form-control">
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label>Realizar Descuento:</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">
@@ -245,7 +245,7 @@
                                     </div>
                                     <input th:id="descuento" type="text" class="form-control">
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="form-group">
                                 <label>El cambio es:</label>
                                 <div class="input-group">
@@ -295,8 +295,9 @@
         var totalApagar = 0;
 
         function myFunction(value) {
+            var arrayDeCadenas = value.split("_");
            $.ajax({
-                url: "http://localhost:8284/admin/article/" + value,
+                url: "http://"+location.hostname+":8284/admin/article/" + arrayDeCadenas[0],
                 method: "GET",
                 contentType: "application/json",
                 dataType: 'json',
@@ -333,7 +334,7 @@
                     if(stockCorrect >= cantidad){
                         var total = precio * cantidad;
                         totalApagar = totalApagar + total;
-                        $("#menu").append('<div class="product-info">' +
+                        $("#menu").append('<div id="div_'+idArt+'" class="product-info">' +
                             '<a class="product-title" text="" > '+ nombre +
                             '<span style="font-size: 15px !important;" class="label label-warning pull-right">$'+total+'</span>' +
                             '</a> ' +
@@ -366,6 +367,7 @@
 
     <script type="text/javascript">
         $( document ).ready(function() {
+
             var valor = document.getElementById("totalVentaAmostrar").value;
 
             if (valor > 0){
@@ -376,7 +378,8 @@
         function functionCambio(){
             var totalVentaAmostrar = document.getElementById("totalVentaAmostrar").value;
             var pagaCon = document.getElementById("pagaCon").value;
-            var descuento = document.getElementById("descuento").value;
+            //var descuento = document.getElementById("descuento").value;
+            var descuento = 0;
 
             if(descuento > 0){
                 var precioCondescuento = parseFloat(totalVentaAmostrar) - parseFloat(descuento);
@@ -388,10 +391,38 @@
         
         function imprimirTicket() {
             var id = document.getElementById("idPedido").value;
-            window.open('http://localhost:8284/admin/document/ticket/imprimir/'+id, '_blank');
+            window.open('http://'+location.hostname+':8284/admin/document/ticket/imprimir/'+id, '_blank');
             document.getElementById("idPedido").value = 0;
         }
+
     </script>
+
+    <script href="../js/jquery.scannerdetection.js" th:src="@{/js/jquery.scannerdetection.js}" th:inline="javascript"></script>
+    <script type="text/javascript">
+
+        $( document ).ready(function() {
+            var codeCapture = "";
+            $(window).scannerDetection();
+            $(window).bind('scannerDetectionComplete', function (e, data) {
+
+                var id = data.string;
+
+                $('#article').find('option').each(function (i, e) {
+                    var arrayDeCadenas = $(e).val().split("_");
+                    if (arrayDeCadenas[1] == id) {
+                        $('#article').prop('selectedIndex', i);
+                        document.getElementById("article").onclick;
+                        $('#article').click();
+                        myFunction($(e).val())
+                    }
+                });
+
+            });
+        });
+    </script>
+
+
+
     <!-- Bootstrap 3.3.7 -->
     <script href="../js/bootstrap/dist/js/bootstrap.min.js" th:src="@{/js/bootstrap/dist/js/bootstrap.min.js}"
             th:inline="javascript"/>

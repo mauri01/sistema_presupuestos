@@ -1,13 +1,7 @@
 package com.example.controller;
 
-import com.example.model.Article;
-import com.example.model.Role;
-import com.example.model.User;
-import com.example.model.Venta;
-import com.example.service.ArticleService;
-import com.example.service.ProveedorService;
-import com.example.service.UserService;
-import com.example.service.VentaService;
+import com.example.model.*;
+import com.example.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,7 +14,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 public class LoginController {
@@ -37,12 +33,22 @@ public class LoginController {
 	@Autowired
 	private VentaService ventaService;
 
+	@Autowired
+	private NegocioService negocioService;
+
 	Date date = new Date();
 
 	@RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
 	public ModelAndView login(){
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("login");
+		String nombreNegocio = "Sistema de VENTAS";
+
+		Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
+		if(negocio.isPresent()){
+			nombreNegocio =negocio.get().getNombre().toUpperCase();
+		}
+		modelAndView.addObject("nombreNegocio", nombreNegocio);
 		return modelAndView;
 	}
 
@@ -244,14 +250,24 @@ public class LoginController {
 		modelAndView.setViewName("admin/article");
 		String messageError = null;
 		String message = null;
+		boolean noExisteCodigo = true;
 
 		Article articleCreated = articleService.findbyName(article.getNombre());
-		if(articleCreated == null){
-			article.setPrecioVenta(Float.parseFloat("0	"));
+		if(article.getCodigoBarra() != 0 ){
+			Optional<Article> articleBarra = articleService.findAllArticle()
+					.stream().filter(articlebd -> articlebd.getCodigoBarra() == article.getCodigoBarra()).findFirst();
+
+			if(articleBarra.isPresent()){
+				noExisteCodigo = false;
+			}
+		}
+
+		if(articleCreated == null && noExisteCodigo){
+			article.setPrecioVenta(Float.parseFloat("0"));
 			articleService.saveArticle(article);
 			message = "El Artículo fue creado de forma correcta";
 		}else{
-			messageError = "El nombre del Artículo ya existe.";
+			messageError = "El nombre del Artículo o codigo de barra ya existe.";
 		}
 		modelAndView.addObject("error", messageError);
 		modelAndView.addObject("message", message);

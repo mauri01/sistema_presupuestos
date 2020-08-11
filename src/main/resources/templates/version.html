@@ -156,7 +156,7 @@
 
         function myFunction(value) {
            $.ajax({
-                url: "http://localhost:8284/admin/article/" + value,
+                url: "http://"+location.hostname+":8284/admin/article/" + value,
                 method: "GET",
                 contentType: "application/json",
                 dataType: 'json',

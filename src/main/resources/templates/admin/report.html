@@ -31,7 +31,7 @@
           var arrayCompras = new Array(12);
           for (var i = 0; i < 12; i++) {
               $.ajax({
-                  url: "http://localhost:8284/report/compras/"+(i+1)+"/"+ano,
+                  url: "http://"+location.hostname+":8284/report/compras/"+(i+1)+"/"+ano,
                   method: "GET",
                   contentType: "application/json",
                   dataType: 'json',
@@ -58,7 +58,7 @@
           var arrayVenta= new Array(12);
           for (var i = 0; i < 12; i++) {
               $.ajax({
-                  url: "http://localhost:8284/report/ventas/"+(i+1)+"/"+ano,
+                  url: "http://"+location.hostname+":8284/report/ventas/"+(i+1)+"/"+ano,
                   method: "GET",
                   contentType: "application/json",
                   dataType: 'json',
@@ -222,7 +222,7 @@
           <div class="small-box bg-red">
             <div class="inner">
               <h3>Documentos</h3>
-              <p style='cursor: pointer' data-toggle="modal" data-target="#modal-default">
+              <p style='cursor: pointer' data-toggle="modal" id="btn_descargar" data-target="#modal-default">
                 Descargar
               </p>
             </div>
@@ -354,7 +354,7 @@
                 <div class="info-box-content">
                   <span class="info-box-number">Reportes en EXCEL</span>
                   <span class="info-box-text">Ventas y Compras Realizadas, Stock Completo</span>
-                  <a href="http://localhost:8284/admin/document/descargar/0">Descargar</a >
+                  <a id="descargaExcel">Descargar</a >
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -367,7 +367,7 @@
                 <div class="info-box-content">
                   <span class="info-box-number">Reportes en PDF</span>
                   <span class="info-box-text">Ventas y Compras Realizadas, Stock Completo</span>
-                  <a href="http://localhost:8284/admin/document/descargar/1">Descargar</a>
+                  <a id="descargaPDF">Descargar</a>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -396,6 +396,16 @@
   <script href="../js/ripples.js" th:src="@{/js/ripples.js}" th:inline="javascript"/>
   <script type="text/javascript">
       $.material.init();
+  </script>
+
+  <script type="text/javascript">
+      document.getElementById("btn_descargar").addEventListener("click", myFunction);
+
+      function myFunction() {
+          document.getElementById("descargaExcel").href = "http://"+location.hostname+":8284/admin/document/descargar/0";
+          document.getElementById("descargaPDF").href = "http://"+location.hostname+":8284/admin/document/descargar/1";
+      }
+
   </script>
   <!-- AdminLTE App -->
   <script href="../js/adminlte.min.js" th:src="@{/js/adminlte.min.js}" th:inline="javascript"/>

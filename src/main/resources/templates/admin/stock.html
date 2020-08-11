@@ -75,6 +75,11 @@
                             <h4><i class="icon fa fa-ban"></i> Error!</h4>
                             <p th:text="${error}"></p>
                         </div>
+                        <div class="alert alert-danger alert-dismissible" id="errorValidation" hidden>
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <h4><i class="icon fa fa-ban"></i> Error!</h4>
+                            <p>Debe seleccionar un Articulo</p>
+                        </div>
                         <div th:if="${message}" class="alert alert-success alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                             <h4><i class="icon fa fa-check"></i> Ok!</h4>
@@ -95,16 +100,19 @@
 
                         <!-- /.box-header -->
                         <!-- form start -->
-                        <form autocomplete="off" th:action="@{/stock}" th:object="${compra}" method="post">
+                        <form autocomplete="off" th:action="@{/stock}" th:object="${compra}" method="post" name="formulario">
                             <div class="box-body">
 
                                 <div class="form-group">
                                     <label>Artículo</label>
-                                    <select class="form-control select2" id="selectedArticulo" th:required="required" th:field="*{articleId}" style="width: 100%;">
-                                        <option th:each="articles : ${articles}" th:name="${articles.id}" th:id="${articles.id}"
-                                                th:value="${articles.id}" th:text="${articles.nombre}"></option>
+                                    <select class="form-control select2" id="article" onChange="myFunction(this.options[this.selectedIndex].value)" style="width: 100%;">
+                                        <option>Seleccione Art</option>
+                                        <option th:each="articles : ${articles}"
+                                                th:value="${articles.id+'_'+articles.codigoBarra}" th:text="${articles.nombre}"></option>
                                     </select>
                                 </div>
+
+                                <input id="articleValue" th:field="*{articleId}" class="form-control" style="display: none">
 
                                 <div class="col-md-2">
                                     <label>Cantidad</label>
@@ -180,16 +188,60 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            console.log("asd");
             var id = document.getElementById("idSelected").value;
 
-
-            $('#selectedArticulo').find('option').each(function(i,e){
-                console.log("i="+i+"e="+$(e).val());
-                if($(e).val() == id){
-                    console.log("selected")
-                    $('#selectedArticulo').prop('selectedIndex',i);
+            $('#article').find('option').each(function(i,e){
+                var arrayDeCadenas = $(e).val().split("_");
+                if (arrayDeCadenas[0] == id) {
+                    $('#article').prop('selectedIndex', i);
+                    document.getElementById("article").onclick;
+                    $('#article').click();
+                    document.getElementById("articleValue").value = arrayDeCadenas[0];
                 }
+            });
+        });
+
+        function myFunction(value) {
+            var arrayDeCadenas = value.split("_");
+            document.getElementById("articleValue").value = arrayDeCadenas[0];
+        }
+
+        window.addEventListener("load",function(){
+            document.formulario.addEventListener("submit",validarFormulario);
+
+        });
+
+        function validarFormulario(e){
+            var valor = document.getElementById("articleValue").value;
+            if(valor == "Seleccione Art" || valor == 0){
+                e.preventDefault();
+                document.getElementById("errorValidation").style.display = "block"
+            }
+        }
+
+
+    </script>
+
+
+    <script href="../js/jquery.scannerdetection.js" th:src="@{/js/jquery.scannerdetection.js}" th:inline="javascript"></script>
+    <script type="text/javascript">
+
+        $( document ).ready(function() {
+            $(window).scannerDetection();
+            $(window).bind('scannerDetectionComplete', function (e, data) {
+
+                var id = data.string;
+
+                $('#article').find('option').each(function (i, e) {
+                    var arrayDeCadenas = $(e).val().split("_");
+                    if (arrayDeCadenas[1] == id) {
+                        $('#article').prop('selectedIndex', i);
+                        document.getElementById("article").onclick;
+                        $('#article').click();
+                        document.getElementById("articleValue").value = arrayDeCadenas[0];
+                    }
+                });
+
             });
         });
     </script>

@@ -101,11 +101,12 @@
     <p class="centrado">¡GRACIAS POR SU COMPRA!
         <br th:text="${negocio.web} ?: ''">
         <br>
-    <button class="oculto-impresion" onclick="imprimir()">Imprimir</button>
+    <button id="oculto-impresion" class="oculto-impresion" onclick="imprimir()">Imprimir</button>
 </div>
 
 <script type="text/javascript">
     function imprimir() {
+        document.getElementById("oculto-impresion").style.display = "none";
         window.print();
     }
 </script>

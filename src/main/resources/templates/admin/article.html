@@ -41,7 +41,7 @@
 </STYLES>
 
 </head>
-<body onload="functionAlert();"class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
   <header class="main-header">
@@ -89,12 +89,17 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form autocomplete="off" th:action="@{/article}" th:object="${article}" method="post">
+            <form autocomplete="off" th:action="@{/article}" th:object="${article}" method="post" name="formulario">
               <div class="box-body">
-                <div class="form-group">
+                <div class="form-group col-md-6">
                   <label>Nombre Artículo</label>
                   <input type="text" name="name" th:field="*{nombre}" th:required="required" class="form-control" id="name" >
                 </div>
+                  <div class="form-group col-md-6">
+                      <i class="fa fa-barcode"></i>
+                      <label>Codigo de Barras</label>
+                      <input type="text" name="codigoBarra" id="codigoBarra" onfocus="this.value=''" th:field="*{codigoBarra}" class="form-control" id="codigoBarra" >
+                  </div>
                 <div>
                   <label>Medida</label>
                   <select class="form-control select2" th:field="*{medida}" id="medidas" style="width: 100%;">
@@ -121,25 +126,35 @@
 <!-- ./wrapper -->
 <SCRIPTS><!-- MAIN SCRIPTS-->
   <!-- jQuery 3 -->
-  <script th:inline="javascript" type="text/javascript">
-
-      function functionAlert(response){
-
-          // Escuchamos el evento 'change' del input donde cargamos el archivo
-          $('input[type=file]').change(function () {
-              var filePath = $(this).val();
-              console.log(filePath);
-          });
-
-      }
-
-  </script>
   <script href="../js/jquery/dist/jquery.min.js" th:src="@{/js/jquery/dist/jquery.min.js}" th:inline="javascript"/>
   <script href="../js/jquery-ui/jquery-ui.min.js" th:src="@{/js/jquery-ui/jquery-ui.min.js}" th:inline="javascript"/>
 
   <script type="text/javascript">
       $.widget.bridge('uibutton', $.ui.button);
   </script>
+
+    <script type="text/javascript">
+
+        window.addEventListener("keypress", function(event){
+            if (event.keyCode == 13){
+                event.preventDefault();
+            }
+        }, false);
+
+
+
+        window.addEventListener("load",function(){
+            document.formulario.addEventListener("submit",validarFormulario);
+
+        });
+
+        function validarFormulario(e){
+            if(window.formulario.codigoBarra.value==""){
+                document.getElementById("codigoBarra").value = 0;
+            }
+        }
+
+    </script>
   <!-- Bootstrap 3.3.7 -->
   <script href="../js/bootstrap/dist/js/bootstrap.min.js" th:src="@{/js/bootstrap/dist/js/bootstrap.min.js}"
           th:inline="javascript"/>
