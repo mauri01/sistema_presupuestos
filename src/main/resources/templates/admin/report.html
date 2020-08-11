@@ -31,7 +31,7 @@
           var arrayCompras = new Array(12);
           for (var i = 0; i < 12; i++) {
               $.ajax({
-                  url: "http://localhost:8284/report/compras/"+i+"/"+ano,
+                  url: "http://"+location.hostname+":8284/report/compras/"+i+"/"+ano,
                   method: "GET",
                   contentType: "application/json",
                   dataType: 'json',
@@ -59,7 +59,7 @@
           var arrayVenta= new Array(12);
           for (var i = 0; i < 12; i++) {
               $.ajax({
-                  url: "http://localhost:8284/report/ventas/"+i+"/"+ano,
+                  url: "http://"+location.hostname+":8284/report/ventas/"+i+"/"+ano,
                   method: "GET",
                   contentType: "application/json",
                   dataType: 'json',
@@ -224,7 +224,7 @@
           <div class="small-box bg-red">
             <div class="inner">
               <h3>PDF</h3>
-              <p>Proximamente</p>
+              <p>Version PRO</p>
             </div>
             <div class="icon">
               <i class="fa fa-copy"></i>
