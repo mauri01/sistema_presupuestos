@@ -90,7 +90,8 @@
                                     <td th:text="${object.cantidadArticulos}"></td>
                                     <td th:text="'$ '+${object.ventaTotalPrecio}"></td>
                                     <td>
-                                        <button title="Ver Pedido" type="button" class="btn btn-default" th:id="${object.idPedido}"
+                                        <button style="padding-top: 0px!important;margin-top: 0px!important;margin-bottom: 0px!important;padding-bottom: 0px!important;"
+                                                title="Ver Pedido" type="button" class="btn" th:id="${object.idPedido}"
                                                 onclick="myFunction(this.id)" data-toggle="modal"
                                                 data-target="#modal-default">
                                             <i class="fa fa-eye"></i>
