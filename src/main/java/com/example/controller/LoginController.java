@@ -244,6 +244,36 @@ public class LoginController {
 		return modelAndView;
 	}
 
+	@RequestMapping(value="/article/barcode")
+	public ModelAndView changeBarcode(@RequestParam String barcode, @RequestParam String artId) throws ParseException {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("admin/stockList");
+		String message = "";
+
+		Optional<Article> existBarcode = articleService.findAllArticle()
+				.stream()
+				.filter(x -> barcode.equals(x.getCodigoBarra()))
+				.findFirst();
+
+		if(!existBarcode.isPresent()){
+			try{
+				Article article = articleService.findbyId(Integer.parseInt(artId));
+				article.setCodigoBarra(barcode);
+				articleService.saveArticle(article);
+				message = "Se realizo el cambio Correctamente";
+			}catch (Exception e){
+				message = "Ocurrio un error, vuelva a intentar";
+			}
+		}else{
+			message = "El codigo de barra ya existe.";
+		}
+
+
+		modelAndView.addObject("messageCarga", message);
+		modelAndView.addObject("articles",articleService.findAllArticle());
+		return modelAndView;
+	}
+
 	@RequestMapping(value="/article", method = RequestMethod.POST)
 	public ModelAndView addArticle(@Valid Article article){
 		ModelAndView modelAndView = new ModelAndView();
@@ -253,7 +283,7 @@ public class LoginController {
 		boolean noExisteCodigo = true;
 
 		Article articleCreated = articleService.findbyName(article.getNombre());
-		if(article.getCodigoBarra() != 0 ){
+		if(!article.getCodigoBarra().equals("0") && !article.getCodigoBarra().equals("")){
 			Optional<Article> articleBarra = articleService.findAllArticle()
 					.stream().filter(articlebd -> articlebd.getCodigoBarra() == article.getCodigoBarra()).findFirst();
 

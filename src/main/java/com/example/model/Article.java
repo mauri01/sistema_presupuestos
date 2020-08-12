@@ -24,7 +24,7 @@ public class Article {
     private Float precioVenta;
 
     @Column(name = "codigo_barra", nullable = false)
-    private int codigoBarra = 0;
+    private String codigoBarra = "0";
 
     public String getNombre() {
         return nombre;
@@ -66,11 +66,11 @@ public class Article {
         this.precioVenta = precioVenta;
     }
 
-    public int getCodigoBarra() {
+    public String getCodigoBarra() {
         return codigoBarra;
     }
 
-    public void setCodigoBarra(int codigoBarra) {
+    public void setCodigoBarra(String codigoBarra) {
         this.codigoBarra = codigoBarra;
     }
 }
