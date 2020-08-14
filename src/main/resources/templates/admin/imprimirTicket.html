@@ -71,8 +71,7 @@
     <br>*******************</p>
     <p class="tituloNegocio" th:text="${negocio.nombre} ?: 'Sistema de Ventas'">
     <p class="centrado" th:if="${negocio.domicilio}" th:text="${negocio.domicilio}+' - Tel:'+${negocio.tel}">
-    <p class="centrado" th:if="${negocio.domicilio == null}"> No Fiscal
-    <br th:text="${fecha}">
+    <p class="centrado" style="font-size: 10px !important;" th:text="'CUIT:' + ${negocio.cuit}">
     </p>
     </p>
     <p class="centrado">*******************
@@ -92,13 +91,16 @@
             <td class="precio Unit." th:text="${object.precioArticle}"></td>
         </tr>
         <tr>
-            <td class="cantidad"></td>
-            <td class="producto">TOTAL</td>
-            <td class="precio" th:text="'$'+${totalVenta}"></td>
+            <br>
+            <td class="cantidad" style="font-size: 10px !important;">TOTAL</td>
+            <td class="producto" th:text="'$'+${totalVenta}"></td>
+            <td class="precio"></td>
         </tr>
         </tbody>
     </table>
     <p class="centrado">¡GRACIAS POR SU COMPRA!
+    <p class="centrado"> No Fiscal
+        <br th:text="${fecha}">
         <br th:text="${negocio.web} ?: ''">
         <br>
     <button id="oculto-impresion" class="oculto-impresion" onclick="imprimir()">Imprimir</button>

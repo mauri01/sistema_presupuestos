@@ -83,31 +83,38 @@
                         <div class="box-header">
                             <h3 class="box-title">Datos Registrados</h3>
                         </div>
+                        <p style="padding-left: 10px">Puedes Filtrar por cualquier valor si lo necesitas:</p>
+                        <input style="padding-left: 10px" class="form-control" id="myInput" type="text" placeholder="Ingresa busqueda..">
+                        <br>
                         <!-- /.box-header -->
                         <div class="box-body table-responsive no-padding">
                             <table class="table table-hover">
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Medida</th>
-                                    <th>Stock</th>
-                                    <th>Precio Venta</th>
-                                    <th>Accion</th>
-                                </tr>
-                                <tr th:each="object : ${articles}">
-                                    <td th:text="${object.nombre}"></td>
-                                    <td th:text="${object.medida}"></td>
-                                    <td th:text="${object.stock}"></td>
-                                    <td th:text="'$ '+${object.precioVenta}"></td>
-                                    <td>
-                                        <a th:href="@{${'/admin/cargarstock/'+object.id}}" data-toggle="tooltip" style="padding-right: 10px;" title="Cargar Stock" class="fa  fa-plus columnasStyle"></a>
-                                        <button type="button" class="btn columnasStyle" th:id="${object.id}" title="Cambiar Precio" onclick="myFunction(this.id)" data-toggle="modal" data-target="#modal-default">
-                                            <i class="fa fa-dollar"></i>
-                                        </button>
-                                        <button type="button" class="btn columnasStyle" th:id="${object.id}" title="Codigo de Barras" onclick="myFunction(this.id)" data-toggle="modal" data-target="#modal-default2">
-                                            <i class="fa fa-barcode"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Medida</th>
+                                        <th>Stock</th>
+                                        <th>Precio Venta</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="myTable">
+                                    <tr th:each="object : ${articles}">
+                                        <td th:text="${object.nombre}"></td>
+                                        <td th:text="${object.medida}"></td>
+                                        <td th:text="${object.stock}"></td>
+                                        <td th:text="'$ '+${object.precioVenta}"></td>
+                                        <td>
+                                            <a th:href="@{${'/admin/cargarstock/'+object.id}}" data-toggle="tooltip" style="padding-right: 10px;" title="Cargar Stock" class="fa  fa-plus columnasStyle"></a>
+                                            <button type="button" class="btn columnasStyle" th:id="${object.id}" title="Cambiar Precio" onclick="myFunction(this.id)" data-toggle="modal" data-target="#modal-default">
+                                                <i class="fa fa-dollar"></i>
+                                            </button>
+                                            <button type="button" class="btn columnasStyle" th:id="${object.id}" title="Codigo de Barras" onclick="myFunction(this.id)" data-toggle="modal" data-target="#modal-default2">
+                                                <i class="fa fa-barcode"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -154,7 +161,7 @@
                                 <div class="form-group">
                                     <label>Ingrese Codigo de Barra</label>
                                     <input type="text" name="barcode" onfocus="this.value=''" th:required="required" class="form-control" id="barcode" >
-                                    <input name="artId" id="artId">
+                                    <input type="hidden" name="artId" id="artId">
                                 </div>
                                 <p class="text-red" id="errorBarcode" hidden>El codigo no puede ser 0</p>
                                 <div class="modal-footer">
@@ -188,6 +195,17 @@
 
     <script type="text/javascript">
         $.widget.bridge('uibutton', $.ui.button);
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
     </script>
 
     <script type="text/javascript">

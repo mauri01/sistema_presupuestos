@@ -76,15 +76,21 @@
                         <div class="box-header">
                             <h3 class="box-title">Datos Registrados</h3>
                         </div>
+                        <p style="padding-left: 10px">Puedes Filtrar por cualquier valor si lo necesitas:</p>
+                        <input style="padding-left: 10px" class="form-control" id="myInput" type="text" placeholder="Ingresa busqueda..">
+                        <br>
                         <!-- /.box-header -->
                         <div class="box-body table-responsive no-padding">
                             <table class="table table-hover">
+                                <thead>
                                 <tr>
                                     <th>Fecha Venta</th>
                                     <th>Cantidad Articulos</th>
                                     <th>Total Venta</th>
                                     <th>Accion</th>
                                 </tr>
+                                </thead>
+                                <tbody id="myTableSearch">
                                 <tr th:each="object : ${listaVentasTotales}">
                                     <td th:text="${object.fechaVenta}"></td>
                                     <td th:text="${object.cantidadArticulos}"></td>
@@ -98,6 +104,7 @@
                                         </button>
                                     </td>
                                 </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -157,7 +164,6 @@
                     $("#myTable").find("tr:gt(0)").remove();
                     for (var key in result) {
                         if (result.hasOwnProperty(key)) {
-                            console.log(key, result[key]);
                             $('#myTable tr:last').after('<tr></tr><td><a>' + result[key].nameArticle + '</a></td>' +
                                 '<td>' + result[key].cantidad + '</td>' +
                                 '<td><span class="label label-success">' + result[key].precioArticle + '</span></td>' +
@@ -173,6 +179,16 @@
 
     <script type="text/javascript">
         $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTableSearch tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
     </script>
     <!-- Bootstrap 3.3.7 -->
     <script href="../js/bootstrap/dist/js/bootstrap.min.js" th:src="@{/js/bootstrap/dist/js/bootstrap.min.js}"
