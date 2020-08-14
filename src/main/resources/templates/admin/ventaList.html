@@ -75,19 +75,26 @@
                         <div class="box-header">
                             <h3 class="box-title">Datos Registrados</h3>
                         </div>
+                        <p style="padding-left: 10px">Puedes Filtrar por cualquier valor si lo necesitas:</p>
+                        <input style="padding-left: 10px" class="form-control" id="myInput" type="text" placeholder="Ingresa busqueda..">
+                        <br>
                         <!-- /.box-header -->
                         <div class="box-body table-responsive no-padding">
                             <table class="table table-hover">
+                                <thead>
                                 <tr>
                                     <th>Fecha Venta</th>
                                     <th>Cantidad Articulos</th>
                                     <th>Total Venta</th>
                                 </tr>
+                                </thead>
+                                <tbody id="myTable">
                                 <tr th:each="object : ${listaVentasTotales}">
                                     <td th:text="${object.fechaVenta}"></td>
                                     <td th:text="${object.cantidadArticulos}"></td>
                                     <td th:text="${object.ventaTotalPrecio}"></td>
                                 </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -140,6 +147,17 @@
 
     <script type="text/javascript">
         $.widget.bridge('uibutton', $.ui.button);
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
     </script>
     <!-- Bootstrap 3.3.7 -->
     <script href="../js/bootstrap/dist/js/bootstrap.min.js" th:src="@{/js/bootstrap/dist/js/bootstrap.min.js}"

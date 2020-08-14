@@ -65,7 +65,7 @@ public class StockController {
                 Compra compraCreated = compraService.saveCompra(compra);
 
                 Article article = articleService.findbyId(compraCreated.getArticleId());
-                article.setStock(compraCreated.getCantidad());
+                article.setStock(article.getStock() + compraCreated.getCantidad());
                 article.setPrecioVenta(compra.getPrecioVenta());
                 articleService.saveArticle(article);
                 modelAndView.addObject("messageResult","Se registro de forma Correcta");
