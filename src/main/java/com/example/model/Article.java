@@ -26,6 +26,9 @@ public class Article {
     @Column(name = "codigo_barra", nullable = false)
     private String codigoBarra = "0";
 
+    @Column(name = "active" ,columnDefinition="boolean default true")
+    private boolean active=true;
+
     public String getNombre() {
         return nombre;
     }
@@ -72,5 +75,13 @@ public class Article {
 
     public void setCodigoBarra(String codigoBarra) {
         this.codigoBarra = codigoBarra;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

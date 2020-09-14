@@ -9,6 +9,7 @@ public interface ArticleService {
     public Article saveArticle(Article article);
     public List<Article> findAllArticle();
     public Article findbyId(int id);
+    public List<Article> findAllArticleActive();
 
     void descontarStock(String idArt, String cantidad);
 }

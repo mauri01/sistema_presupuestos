@@ -36,7 +36,7 @@ public class StockController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/stock");
 
-        modelAndView.addObject("articles",articleService.findAllArticle());
+        modelAndView.addObject("articles",articleService.findAllArticleActive());
         modelAndView.addObject("proveedores",proveedorService.findAll());
         modelAndView.addObject("compra",new Compra());
         return modelAndView;
@@ -47,7 +47,28 @@ public class StockController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/stockList");
 
-        modelAndView.addObject("articles",articleService.findAllArticle());
+        modelAndView.addObject("articles",articleService.findAllArticleActive());
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/admin/deleteArticle/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteArticle(@PathVariable("id") int id){
+
+        String messageCarga = "";
+        try{
+            Article article = articleService.findbyId(id);
+            article.setActive(false);
+            articleService.saveArticle(article);
+            messageCarga = "Articulo eliminado de forma correcta.";
+        }catch (Exception e){
+            messageCarga = "Ocurrio un error, vuelva a intentar.";
+        }
+
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/stockList");
+        modelAndView.addObject("messageCarga",messageCarga);
+        modelAndView.addObject("articles",articleService.findAllArticleActive());
         return modelAndView;
     }
 

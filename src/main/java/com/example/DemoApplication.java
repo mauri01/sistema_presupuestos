@@ -33,14 +33,14 @@ public class DemoApplication {
 			panel.add(loginButton);
 
 			loginButton.addActionListener(new ActionListener() {
-									   public void actionPerformed(ActionEvent e) {
-										   try {
-											   Desktop.getDesktop().browse(URI.create("http://localhost:8284/"));
-										   } catch (IOException e1) {
-											   e1.printStackTrace();
-										   }
-									   }
-								   });
+				public void actionPerformed(ActionEvent e) {
+					try {
+						Desktop.getDesktop().browse(URI.create("http://localhost:8284/"));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			});
 
 			panel.updateUI();
 		}catch (Exception e){
