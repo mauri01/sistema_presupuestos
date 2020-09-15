@@ -118,7 +118,7 @@ public class LoginController {
 		countVentas = getCountVentasFecha(countVentas);
 		String stockDisponible = getStockDisponible();
 
-		List<Article> allArticles = articleService.findAllArticle();
+		List<Article> allArticles = articleService.findAllArticleActive();
 		modelAndView.addObject("provTotal",proveedorService.findAll());
 		modelAndView.addObject("countVentas", countVentas);
 		modelAndView.addObject("fechaMes",fechaMes);
@@ -130,7 +130,7 @@ public class LoginController {
 
 	public String getStockDisponible() {
 		String stockMessage = "-";
-		List<Article> stockDisponible = articleService.findAllArticle().stream()
+		List<Article> stockDisponible = articleService.findAllArticleActive().stream()
 				.filter(article -> article.getStock() > 0).collect(Collectors.toList());
 		if(stockDisponible.size() != 0){
 			stockMessage = "+";

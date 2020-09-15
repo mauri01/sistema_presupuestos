@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("articleService")
 public class ArticleServiceImpl implements ArticleService{
@@ -26,6 +27,12 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public List<Article> findAllArticle(){
         return articleRepository.findAll();
+    }
+
+    @Override
+    public List<Article> findAllArticleActive(){
+        List<Article> articles = articleRepository.findAll();
+        return articles.stream().filter(Article::isActive).collect(Collectors.toList());
     }
 
     @Override

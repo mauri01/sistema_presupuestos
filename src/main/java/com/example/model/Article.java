@@ -23,6 +23,9 @@ public class Article {
     @Column(name = "precio_venta", nullable = false)
     private Float precioVenta;
 
+    @Column(name = "active" ,columnDefinition="boolean default true")
+    private boolean active=true;
+
     public String getNombre() {
         return nombre;
     }
@@ -61,5 +64,13 @@ public class Article {
 
     public void setPrecioVenta(Float precioVenta) {
         this.precioVenta = precioVenta;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
