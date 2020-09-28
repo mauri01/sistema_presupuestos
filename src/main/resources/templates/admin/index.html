@@ -20,6 +20,7 @@
               rel="stylesheet"/>
         <!-- Theme style -->
         <link th:href="@{/css/AdminLTE.min.css}" href="../../css/AdminLTE.min.css" rel="stylesheet"/>
+        <link th:href="@{/css/estilos.css}" href="../../css/estilos.css" rel="stylesheet"/>
         <!-- Material Design -->
         <link th:href="@{/css/bootstrap-material-design.min.css}" href="../../css/bootstrap-material-design.min.css"
               rel="stylesheet"/>
@@ -50,7 +51,46 @@
     <aside class="main-sidebar">
         <div th:replace="fragments/mainView :: mainMenu"></div>
     </aside>
+    <div style="z-index: 100 !important;" class="container-all" id="modal">
 
+        <div class="popup">
+            <div class="img"></div>
+            <div class="container-text">
+                <h1>Descarga la version PRO</h1>
+                <p>Saca el máximo provecho a tu negocio con la versión PRO, donde podrás disfrutar de todas las funciones exclusivas
+                    para no perderte ninguna informacion importante.
+                </p>
+                <ol>
+                    <li>
+                        Reportes en PDF y Excel (Diario, mensual y anual)
+                    </li>
+                    <li>
+                        Datos sobre el articulo mas vendido.
+                    </li>
+                    <li>
+                        Impresion de tickets.
+                    </li>
+                    <li>
+                        Calculo del vuelto al cliente.
+                    </li>
+                    <li>
+                        Detalles de ventas realizadas.
+                    </li>
+                    <li>
+                        Soporte para lector Codigo de barras.
+                    </li>
+                    <li>
+                        Ganancias totales.
+                    </li>
+                </ol>
+                <br>
+                <a href="https://youtu.be/Sm868IZEkzI" target="_blank">Mas información</a>
+            </div>
+
+            <a href="#" class="btn-close-popup">X</a>
+        </div>
+
+    </div>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -58,6 +98,7 @@
             <h1>
                 Dashboard
                 <small>Panel de Control</small>
+                <a href="#modal" id="btn-popup" hidden></a>
             </h1>
         </section>
 
@@ -222,6 +263,7 @@
     </script>
 
     <script type="text/javascript">
+
         var nombre = "";
         var precio = "";
         var cantidad = "";
@@ -229,6 +271,16 @@
         var value = "";
         var stockCorrect = 0;
         var totalApagar = 0;
+
+        function load(){
+
+            const data = sessionStorage.getItem('popup');
+
+            if(!data){
+                document.getElementById("btn-popup").click();
+                sessionStorage.setItem('popup', true);
+            }
+        }
 
         function myFunction(value) {
            $.ajax({
@@ -259,6 +311,7 @@
         }
 
         $(document).ready(function(){
+            load();
             document.getElementById("errorCargar").style.display = 'none';
 
             $("#cargarCompra").click(function(){
