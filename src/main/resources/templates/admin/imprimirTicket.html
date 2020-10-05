@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<html lang="en">
+
 <head>
     <link rel="stylesheet" href="style.css">
     <style>
@@ -64,14 +63,11 @@
 </head>
 <body>
 <div class="ticket">
-    <!--<img
-            src="https://yt3.ggpht.com/-3BKTe8YFlbA/AAAAAAAAAAI/AAAAAAAAAAA/ad0jqQ4IkGE/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"
-            alt="Logotipo">-->
     <p class="centrado">*******************
     <br>*******************</p>
     <p class="tituloNegocio" th:text="${negocio.nombre} ?: 'Sistema de Ventas'">
     <p class="centrado" th:if="${negocio.domicilio}" th:text="${negocio.domicilio}+' - Tel:'+${negocio.tel}">
-    <p class="centrado" style="font-size: 10px !important;" th:text="'CUIT:' + ${negocio.cuit}">
+    <p class="centrado" style="font-size: 10px !important;" th:if="${negocio.cuit}" th:text="'CUIT:' + ${negocio.cuit}">
     </p>
     </p>
     <p class="centrado">*******************
