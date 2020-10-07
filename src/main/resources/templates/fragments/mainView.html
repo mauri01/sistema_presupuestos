@@ -75,6 +75,20 @@
                     </ul>
                 </li>
 
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-users"></i>
+                        <span>Clientes</span>
+                        <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a th:href="@{/admin/cliente}"><i class="fa fa-share-square"></i> <span>Cargar</span></a></li>
+                        <li><a th:href="@{/admin/clientes}"><i class="fa fa-database"></i> <span>Registro</span></a></li>
+                    </ul>
+                </li>
+
 
                 <li><a th:href="@{/admin/document}"><i class="fa fa-book"></i> <span>Guia</span></a></li>
                 <li><a th:href="@{/admin/faq}"><i class="fa fa-question"></i> <span>Ayuda</span></a></li>
