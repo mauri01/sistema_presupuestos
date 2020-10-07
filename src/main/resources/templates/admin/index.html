@@ -171,7 +171,16 @@
                         </div>
                         <div class="box-body">
 
-                            <div class="form-group">
+                            <div style="margin-top: 5px !important;" class="form-group">
+                                <label>Cliente</label>
+                                <select class="form-control select2" id="cliente" onChange="myCliente(this.options[this.selectedIndex].value)"  style="width: 100%;">
+                                    <option>Seleccione Cliente</option>
+                                    <option th:each="cliente : ${clientes}"
+                                            th:value="${cliente.id}" th:text="${cliente.nombre+'('+cliente.numDocumento+')'}"></option>
+                                </select>
+                            </div>
+
+                            <div style="margin-top: 5px !important;" class="form-group">
                                 <label>Artículo</label>
                                 <select class="form-control select2" id="article" onChange="myFunction(this.options[this.selectedIndex].value)"  style="width: 100%;">
                                     <option>Seleccione Art</option>
@@ -235,6 +244,7 @@
 
                         <form autocomplete="off" th:action="@{/ventas}" method="post">
                             <input id="totalApagarVenta" type="hidden" name="sourceText">
+                            <input id="clienteID" type="hidden" name="clienteID">
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-primary">Realizar Venta</button>
                             </div>
@@ -280,6 +290,10 @@
                 document.getElementById("btn-popup").click();
                 sessionStorage.setItem('popup', true);
             }
+        }
+
+        function myCliente(value){
+            document.getElementById("clienteID").value = value;
         }
 
         function myFunction(value) {

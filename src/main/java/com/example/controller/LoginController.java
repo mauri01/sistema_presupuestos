@@ -1,13 +1,7 @@
 package com.example.controller;
 
-import com.example.model.Article;
-import com.example.model.Role;
-import com.example.model.User;
-import com.example.model.Venta;
-import com.example.service.ArticleService;
-import com.example.service.ProveedorService;
-import com.example.service.UserService;
-import com.example.service.VentaService;
+import com.example.model.*;
+import com.example.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -36,6 +30,9 @@ public class LoginController {
 
 	@Autowired
 	private VentaService ventaService;
+
+	@Autowired
+	private ClienteService clienteService;
 
 	Date date = new Date();
 
@@ -117,6 +114,7 @@ public class LoginController {
 
 		countVentas = getCountVentasFecha(countVentas);
 		String stockDisponible = getStockDisponible();
+		List<Cliente> clientes = clienteService.findAll();
 
 		List<Article> allArticles = articleService.findAllArticleActive();
 		modelAndView.addObject("provTotal",proveedorService.findAll());
@@ -124,6 +122,7 @@ public class LoginController {
 		modelAndView.addObject("fechaMes",fechaMes);
 		modelAndView.addObject("articles", allArticles);
 		modelAndView.addObject("stockDisponible", stockDisponible);
+		modelAndView.addObject("clientes", clientes);
 		modelAndView.setViewName("admin/index");
 		return modelAndView;
 	}

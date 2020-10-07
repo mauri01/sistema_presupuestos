@@ -6,6 +6,7 @@ public class VentasMesModel {
     private int cantidadArticulos;
     private String fechaVenta;
     private int idPedido;
+    private String cliente;
 
     public float getVentaTotalPrecio() {
         return ventaTotalPrecio;
@@ -37,5 +38,13 @@ public class VentasMesModel {
 
     public void setIdPedido(int idPedido) {
         this.idPedido = idPedido;
+    }
+
+    public String getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(String cliente) {
+        this.cliente = cliente;
     }
 }

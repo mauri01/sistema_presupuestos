@@ -74,6 +74,20 @@
                     </ul>
                 </li>
 
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-users"></i>
+                        <span>Clientes</span>
+                        <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a th:href="@{/admin/cliente}"><i class="fa fa-share-square"></i> <span>Cargar</span></a></li>
+                        <li><a th:href="@{/admin/clientes}"><i class="fa fa-database"></i> <span>Registro</span></a></li>
+                    </ul>
+                </li>
+
 
                 <li><a th:href="@{/admin/document}"><i class="fa fa-book"></i> <span>Guias</span></a></li>
                 <li><a th:href="@{/admin/faq}"><i class="fa fa-question"></i> <span>Ayuda</span></a></li>
@@ -166,7 +180,7 @@
     <div th:fragment="footer">
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <b>Version</b> 2.0
+                <b>Version</b> 4.0
             </div>
             <strong>VenTaS </strong><a href="https://drive.google.com/drive/folders/1aYHuF1KnAU3zQNLweqzEADJlj3t9q6F0?usp=sharing" target="_blank">Más información</a>
         </footer>

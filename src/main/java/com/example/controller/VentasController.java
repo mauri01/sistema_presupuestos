@@ -1,9 +1,11 @@
 package com.example.controller;
 
 import com.example.model.Article;
+import com.example.model.Cliente;
 import com.example.model.Venta;
 import com.example.model.VentasMesModel;
 import com.example.service.ArticleService;
+import com.example.service.ClienteService;
 import com.example.service.ProveedorService;
 import com.example.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +38,13 @@ public class VentasController {
     @Autowired
     private ProveedorService proveedorService;
 
+    @Autowired
+    private ClienteService clienteService;
+
     Date date = new Date();
 
     @RequestMapping("/ventas")
-    public ModelAndView process(@RequestParam String sourceText) throws ParseException {
+    public ModelAndView process(@RequestParam String sourceText, @RequestParam String clienteID) throws ParseException {
         int idPedido = 0;
         String fecha = "";
         String messageVenta = "";
@@ -58,7 +63,7 @@ public class VentasController {
                 String precio = datosIndividual[1];
                 String cantidad = datosIndividual[2];
                 try {
-                    idPedido = registrarCompra(idArt, precio, cantidad, idPedido, fecha);
+                    idPedido = registrarCompra(idArt, precio, cantidad, idPedido, fecha, clienteID);
                     articleService.descontarStock(idArt, cantidad);
                 } catch (Exception e) {
                     messageVenta = "Surgio un error al Cargar la venta Intente de Nuevo";
@@ -125,11 +130,14 @@ public class VentasController {
         return stockMessage;
     }
 
-    private int registrarCompra(String idArt, String precio, String cantidad, int idPedido, String fecha) {
+    private int registrarCompra(String idArt, String precio, String cantidad, int idPedido, String fecha, String clienteID) {
         Venta venta = new Venta();
         venta.setArticle(Integer.parseInt(idArt));
         venta.setCantidad(Integer.parseInt(cantidad));
         venta.setPrecio(Float.parseFloat(precio));
+        if(!clienteID.equals("")){
+            venta.setCliente(Integer.parseInt(clienteID));
+        }
 
         if(("").equals(fecha)){
             DateFormat hourdateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
@@ -189,17 +197,22 @@ public class VentasController {
         float cantidadPrecioTotal = 0;
         String fechaVenta = "";
         int cantidadArticulos = 0;
+        String nombreCliente = "";
+
         for (Venta ventaTotal : ventasMes){
             float cantidadPrecio = ventaTotal.getCantidad() * ventaTotal.getPrecio();
             cantidadPrecioTotal = cantidadPrecioTotal+cantidadPrecio;
             fechaVenta = ventaTotal.getFechaVenta();
             cantidadArticulos = cantidadArticulos+ventaTotal.getCantidad();
+            Cliente cliente = clienteService.findbyId(ventaTotal.getCliente());
+            nombreCliente = cliente == null ? "Sin registro" : cliente.getNombre()+"("+cliente.getNumDocumento()+")";
         }
         VentasMesModel ventasMesModel = new VentasMesModel();
         ventasMesModel.setVentaTotalPrecio(cantidadPrecioTotal);
         ventasMesModel.setIdPedido(pedido);
         ventasMesModel.setFechaVenta(fechaVenta);
         ventasMesModel.setCantidadArticulos(cantidadArticulos);
+        ventasMesModel.setCliente(nombreCliente);
         ventasTotales.add(ventasMesModel);
     }
 }
