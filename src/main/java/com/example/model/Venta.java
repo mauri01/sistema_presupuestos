@@ -26,6 +26,9 @@ public class Venta {
     @Column(name = "fecha_venta")
     private String fechaVenta;
 
+    @Column(name = "cliente_id", columnDefinition = "integer default 0")
+    private int cliente;
+
     public int getId() {
         return id;
     }
@@ -72,5 +75,13 @@ public class Venta {
 
     public void setFechaVenta(String fechaVenta) {
         this.fechaVenta = fechaVenta;
+    }
+
+    public int getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(int cliente) {
+        this.cliente = cliente;
     }
 }

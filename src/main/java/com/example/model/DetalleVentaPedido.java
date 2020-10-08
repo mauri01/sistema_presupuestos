@@ -5,6 +5,7 @@ public class DetalleVentaPedido {
     private String nameArticle;
     private float precioArticle;
     private int cantidad;
+    private String cliente;
 
     public String getNameArticle() {
         return nameArticle;
@@ -28,5 +29,13 @@ public class DetalleVentaPedido {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public String getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(String cliente) {
+        this.cliente = cliente;
     }
 }

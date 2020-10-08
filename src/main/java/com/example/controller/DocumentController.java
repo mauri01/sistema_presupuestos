@@ -45,6 +45,9 @@ public class DocumentController {
     @Autowired
     NegocioService negocioService;
 
+    @Autowired
+    ClienteService clienteService;
+
     public static int EXCEL = 0;
     public static int PDF = 1;
     Date date = new Date();
@@ -238,8 +241,9 @@ public class DocumentController {
         filaHeader.createCell(5).setCellValue("VENTA TOTAL");
         filaHeader.createCell(6).setCellValue("PRECIO COMPRA");
         filaHeader.createCell(7).setCellValue("GANANCIA");
+        filaHeader.createCell(8).setCellValue("NOMBRE CLIENTE");
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             Cell cel = filaHeader.getCell(i);
             cel.setCellStyle(headerStyle);
             hoja.autoSizeColumn(i);
@@ -270,6 +274,13 @@ public class DocumentController {
                 cel1.setCellStyle(gananciaStyle1);
             } else {
                 cel1.setCellStyle(gananciaStyle2);
+            }
+
+            Cliente cliente = clienteService.findbyId(ventas.get(i).getCliente());
+            if(cliente != null){
+                filaHeaderTabla.createCell(8).setCellValue(cliente.getNombre());
+            }else{
+                filaHeaderTabla.createCell(8).setCellValue("Sin registro");
             }
 
         }

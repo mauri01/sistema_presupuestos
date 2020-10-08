@@ -87,6 +87,7 @@
                                     <th>Fecha Venta</th>
                                     <th>Cantidad Articulos</th>
                                     <th>Total Venta</th>
+                                    <th>Cliente</th>
                                     <th>Accion</th>
                                 </tr>
                                 </thead>
@@ -95,6 +96,7 @@
                                     <td th:text="${object.fechaVenta}"></td>
                                     <td th:text="${object.cantidadArticulos}"></td>
                                     <td th:text="'$ '+${object.ventaTotalPrecio}"></td>
+                                    <td th:text="${object.cliente}"></td>
                                     <td>
                                         <button style="padding-top: 0px!important;margin-top: 0px!important;margin-bottom: 0px!important;padding-bottom: 0px!important;"
                                                 title="Ver Pedido" type="button" class="btn" th:id="${object.idPedido}"

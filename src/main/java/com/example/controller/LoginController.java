@@ -36,6 +36,9 @@ public class LoginController {
 	@Autowired
 	private NegocioService negocioService;
 
+	@Autowired
+	private ClienteService clienteService;
+
 	Date date = new Date();
 
 	@RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
@@ -125,11 +128,14 @@ public class LoginController {
 		String stockDisponible = getStockDisponible();
 
 		List<Article> allArticles = articleService.findAllArticleActive();
+		List<Cliente> clientes = clienteService.findAll();
+
 		modelAndView.addObject("provTotal",proveedorService.findAll());
 		modelAndView.addObject("countVentas", countVentas);
 		modelAndView.addObject("fechaMes",fechaMes);
 		modelAndView.addObject("articles", allArticles);
 		modelAndView.addObject("stockDisponible", stockDisponible);
+		modelAndView.addObject("clientes", clientes);
 		modelAndView.setViewName("admin/index");
 		return modelAndView;
 	}
