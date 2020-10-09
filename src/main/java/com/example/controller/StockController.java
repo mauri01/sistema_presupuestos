@@ -72,6 +72,18 @@ public class StockController {
         return modelAndView;
     }
 
+    @RequestMapping(value="/admin/cargarstock/{id}", method = RequestMethod.GET)
+    public ModelAndView cargarstocks(@PathVariable("id") int id){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/stock");
+
+        modelAndView.addObject("articles",articleService.findAllArticle());
+        modelAndView.addObject("proveedores",proveedorService.findAll());
+        modelAndView.addObject("compra",new Compra());
+        modelAndView.addObject("idSelected",id);
+        return modelAndView;
+    }
+
     @RequestMapping(value="/stock", method = RequestMethod.POST)
     public ModelAndView addStock(@Valid Compra compra){
         ModelAndView modelAndView = new ModelAndView();
