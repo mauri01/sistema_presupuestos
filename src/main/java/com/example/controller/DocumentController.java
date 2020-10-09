@@ -278,7 +278,7 @@ public class DocumentController {
 
             Cliente cliente = clienteService.findbyId(ventas.get(i).getCliente());
             if(cliente != null){
-                filaHeaderTabla.createCell(8).setCellValue(cliente.getNombre());
+                filaHeaderTabla.createCell(8).setCellValue(cliente.getNombre()+"("+cliente.getNumDocumento()+")");
             }else{
                 filaHeaderTabla.createCell(8).setCellValue("Sin registro");
             }
