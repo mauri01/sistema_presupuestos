@@ -21,6 +21,7 @@
   <!-- Theme style
   <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">-->
   <link th:href="@{/css/AdminLTE.min.css}" href="../../css/AdminLTE.min.css" rel="stylesheet"/>
+  <link th:href="@{/css/loginNew.css}" href="../../css/loginNew.css" rel="stylesheet"/>
   <!-- Material Design -->
   <link th:href="@{/css/bootstrap-material-design.min.css}" href="../../css/bootstrap-material-design.min.css" rel="stylesheet"/>
   <!--<link rel="stylesheet" href="dist/css/ripples.min.css">-->
@@ -40,14 +41,14 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition login-page">
+<body class="hold-transition login-container">
 <div class="login-box">
   <div class="login-logo">
-    <a href="../../index2.html" style="font-weight: bold" th:text="${nombreNegocio}">Sistema de Ven<b>TAS</b></a>
+    <a href="../../index2.html" style="font-weight: bold; color: white !important;" th:text="${nombreNegocio}">Sistema de Ven<b>TAS</b></a>
   </div>
   <!-- /.login-logo -->
-  <div class="login-box-body">
-    <p class="login-box-msg">Ingrese credenciales para acceder al sistema.
+  <div class="login-box-body dark-card">
+    <p class="login-box-msg"  style="color: white !important;">Ingrese credenciales para acceder al sistema.
     <div class="alert alert-danger alert-dismissible" th:if="${(param.error != null) and (param.error[0] == 'true')}">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
       <h4><i class="icon fa fa-ban"></i> Error!</h4>
@@ -55,22 +56,22 @@
     </div>
     <form th:action="@{/login}" method="POST" class="form-signin">
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" id="email" name="email"  th:placeholder="Email">
+        <input style="padding-left: 10px" type="email" class="form-control inputs" id="email" name="email"  th:placeholder="Email">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" id="password" name="password" th:placeholder="Password">
+        <input style="padding-left: 10px" type="password" class="form-control inputs" id="password" name="password" th:placeholder="Password">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
-        <div class="col-xs-5">
-          <button type="submit" class="btn btn-primary btn-raised btn-block btn-flat">Ingresar</button>
+        <div class="text-center">
+          <button type="submit" class="btn-new">Ingresar</button>
         </div>
       </div>
     </form>
-
-    <a th:href="@{/firstRegistration}" class="text-center">Registrar un usuario.</a>
-
+    <div class="text-center">
+      <a th:href="@{/firstRegistration}" class="text-center forget">Registrar un usuario.</a>
+    </div>
   </div>
   <!-- /.login-box-body -->
 </div>
