@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ClienteController {
@@ -64,8 +65,10 @@ public class ClienteController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/clientes");
 
-
-        modelAndView.addObject("clientes",clienteService.findAll());
+        List<Cliente> clientes = clienteService.findAll();
+        modelAndView.addObject("clientes",clientes.stream()
+                .filter(Cliente::isActive)
+                .collect(Collectors.toList()));
         return modelAndView;
     }
 
@@ -83,13 +86,17 @@ public class ClienteController {
         ModelAndView modelAndView = new ModelAndView();
         try{
             Cliente cliente = clienteService.findbyId(id);
-            clienteService.remove(cliente);
+            cliente.setActive(false);
+            clienteService.saveCliente(cliente);
             modelAndView.addObject("message", "Se eliminó el cliente de forma correcta.");
         }catch (Exception e){
             modelAndView.addObject("error", "Ocurrió un error, vuelva a intentar.");
         }
 
-        modelAndView.addObject("clientes",clienteService.findAll());
+        List<Cliente> clientes = clienteService.findAll();
+        modelAndView.addObject("clientes",clientes.stream()
+                .filter(Cliente::isActive)
+                .collect(Collectors.toList()));
         modelAndView.setViewName("admin/clientes");
         return modelAndView;
     }
