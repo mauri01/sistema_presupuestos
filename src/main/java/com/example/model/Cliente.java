@@ -26,6 +26,9 @@ public class Cliente {
     @Column(name = "tel")
     private String tel;
 
+    @Column(name = "active" ,columnDefinition="boolean default true")
+    private boolean active=true;
+
     public int getId() {
         return id;
     }
@@ -72,5 +75,13 @@ public class Cliente {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

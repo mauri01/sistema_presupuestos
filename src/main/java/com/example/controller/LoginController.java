@@ -135,7 +135,9 @@ public class LoginController {
 		modelAndView.addObject("fechaMes",fechaMes);
 		modelAndView.addObject("articles", allArticles);
 		modelAndView.addObject("stockDisponible", stockDisponible);
-		modelAndView.addObject("clientes", clientes);
+		modelAndView.addObject("clientes", clientes.stream()
+																.filter(Cliente::isActive)
+																.collect(Collectors.toList()));
 		modelAndView.setViewName("admin/index");
 		return modelAndView;
 	}
