@@ -82,11 +82,15 @@ public class VentasController {
         String fechaMes = hourdateFormat.format(date);
         countVentas = getCountVentasFecha(countVentas);
         stockDisponible = getStockDisponible();
+        List<Cliente> clientes = clienteService.findAll();
 
-        List<Article> allArticles = articleService.findAllArticle();
+        List<Article> allArticles = articleService.findAllArticleActive();
         modelAndView.addObject("provTotal",proveedorService.findAll());
         modelAndView.addObject("fechaMes",fechaMes);
         modelAndView.addObject("articles", allArticles);
+        modelAndView.addObject("clientes", clientes.stream()
+                .filter(Cliente::isActive)
+                .collect(Collectors.toList()));
         modelAndView.setViewName("admin/index");
 
 
@@ -141,7 +145,7 @@ public class VentasController {
 
         if(("").equals(fecha)){
             DateFormat hourdateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
-            fecha = hourdateFormat.format(date);
+            fecha = hourdateFormat.format(new Date());
         }
 
         venta.setFechaVenta(fecha);
