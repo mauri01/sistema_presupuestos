@@ -50,14 +50,13 @@ public class DocumentController {
 
     public static int EXCEL = 0;
     public static int PDF = 1;
-    Date date = new Date();
 
     @RequestMapping(value = "/admin/document/ticket/imprimir/{id}", method = RequestMethod.GET)
         private ModelAndView createTicketImprimir(HttpServletResponse response, @PathVariable("id") int id) {
         List<DetalleVentaPedido> detalleVentaPedidos = new ArrayList<>();
         float totalVenta= 0;
         DateFormat hourdateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
-        String fecha = hourdateFormat.format(date);
+        String fecha = hourdateFormat.format(new Date());
 
         List<Venta> ventas = ventaService.findAll()
                 .stream()

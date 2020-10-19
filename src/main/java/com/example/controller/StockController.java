@@ -29,8 +29,6 @@ public class StockController {
     @Autowired
     private CompraService compraService;
 
-    Date date = new Date();
-
     @RequestMapping(value="/admin/stock", method = RequestMethod.GET)
     public ModelAndView stock(){
         ModelAndView modelAndView = new ModelAndView();
@@ -89,7 +87,7 @@ public class StockController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/stock");
         DateFormat hourdateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
-        String fecha = hourdateFormat.format(date);
+        String fecha = hourdateFormat.format(new Date());
 
         try{
             float total = compra.getCantidad() * compra.getPrecio();

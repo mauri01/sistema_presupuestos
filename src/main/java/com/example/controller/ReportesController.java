@@ -37,14 +37,13 @@ public class ReportesController {
     public static int CANTIDAD = 2;
     public static int SINCANTIDAD = 3;
 
-    Date date = new Date();
     DateFormat hourdateFormat = new SimpleDateFormat("MM");
     DateFormat hourdateFormatAnio = new SimpleDateFormat("yyyy");
 
     @RequestMapping(value = "/admin/reportes", method = RequestMethod.GET)
     public ModelAndView reportes() throws ParseException {
-        String fechaMes = hourdateFormat.format(date);
-        String fechaAnio = hourdateFormatAnio.format(date);
+        String fechaMes = hourdateFormat.format(new Date());
+        String fechaAnio = hourdateFormatAnio.format(new Date());
 
         float gastosTotales = reportCompras(Integer.parseInt(fechaMes) , Integer.parseInt(fechaAnio));
         float gananciasTotales = reportVentas(Integer.parseInt(fechaMes) , Integer.parseInt(fechaAnio));
