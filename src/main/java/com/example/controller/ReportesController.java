@@ -26,14 +26,13 @@ public class ReportesController {
     @Autowired
     private VentaService ventaService;
 
-    Date date = new Date();
     DateFormat hourdateFormat = new SimpleDateFormat("MM");
     DateFormat hourdateFormatAnio = new SimpleDateFormat("yyyy");
 
     @RequestMapping(value="/admin/reportes", method = RequestMethod.GET)
     public ModelAndView reportes() {
-        String fechaMes = hourdateFormat.format(date);
-        String fechaAnio = hourdateFormatAnio.format(date);
+        String fechaMes = hourdateFormat.format(new Date());
+        String fechaAnio = hourdateFormatAnio.format(new Date());
 
         float gastosTotales = reportCompras(Integer.parseInt(fechaMes) - 1, Integer.parseInt(fechaAnio));
         float gananciasTotales = reportVentas(Integer.parseInt(fechaMes) - 1, Integer.parseInt(fechaAnio));

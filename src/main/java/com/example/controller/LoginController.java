@@ -34,8 +34,6 @@ public class LoginController {
 	@Autowired
 	private ClienteService clienteService;
 
-	Date date = new Date();
-
 	@RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
 	public ModelAndView login(){
 		ModelAndView modelAndView = new ModelAndView();
@@ -110,7 +108,7 @@ public class LoginController {
 		ModelAndView modelAndView = new ModelAndView();
 		int countVentas = 0;
 		DateFormat hourdateFormat = new SimpleDateFormat("MMMM");
-		String fechaMes = hourdateFormat.format(date);
+		String fechaMes = hourdateFormat.format(new Date());
 
 		countVentas = getCountVentasFecha(countVentas);
 		String stockDisponible = getStockDisponible();
@@ -141,9 +139,9 @@ public class LoginController {
 
 	public int getCountVentasFecha(int countVentas) throws ParseException {
 		DateFormat hourdateFormat = new SimpleDateFormat("MM");
-		String fechaMes = hourdateFormat.format(date);
+		String fechaMes = hourdateFormat.format(new Date());
 		DateFormat hourdateFormatAnio = new SimpleDateFormat("yyyy");
-		String fechaAnio = hourdateFormatAnio.format(date);
+		String fechaAnio = hourdateFormatAnio.format(new Date());
 
 		int idPedido = 0;
 		List<Venta> listVentas = ventaService.findAll();

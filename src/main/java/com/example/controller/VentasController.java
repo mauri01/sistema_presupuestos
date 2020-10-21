@@ -41,8 +41,6 @@ public class VentasController {
     @Autowired
     private ClienteService clienteService;
 
-    Date date = new Date();
-
     @RequestMapping("/ventas")
     public ModelAndView process(@RequestParam String sourceText, @RequestParam String clienteID) throws ParseException {
         int idPedido = 0;
@@ -79,7 +77,7 @@ public class VentasController {
 
 
         DateFormat hourdateFormat = new SimpleDateFormat("MMMM");
-        String fechaMes = hourdateFormat.format(date);
+        String fechaMes = hourdateFormat.format(new Date());
         countVentas = getCountVentasFecha(countVentas);
         stockDisponible = getStockDisponible();
         List<Cliente> clientes = clienteService.findAll();
@@ -102,9 +100,9 @@ public class VentasController {
 
     private int getCountVentasFecha(int countVentas) throws ParseException {
         DateFormat hourdateFormat = new SimpleDateFormat("MM");
-        String fechaMes = hourdateFormat.format(date);
+        String fechaMes = hourdateFormat.format(new Date());
         DateFormat hourdateFormatAnio = new SimpleDateFormat("yyyy");
-        String fechaAnio = hourdateFormatAnio.format(date);
+        String fechaAnio = hourdateFormatAnio.format(new Date());
 
         int idPedido = 0;
         List<Venta> listVentas = ventaService.findAll();
@@ -168,9 +166,9 @@ public class VentasController {
         modelAndView.setViewName("admin/ventaList");
 
         DateFormat hourdateFormat = new SimpleDateFormat("MM");
-        String fechaMes = hourdateFormat.format(date);
+        String fechaMes = hourdateFormat.format(new Date());
         DateFormat hourdateFormatAnio = new SimpleDateFormat("yyyy");
-        String fechaAnio = hourdateFormatAnio.format(date);
+        String fechaAnio = hourdateFormatAnio.format(new Date());
 
         List<Venta> listVentas = ventaService.findAll();
         List<VentasMesModel> ventasTotales = new ArrayList<>();
