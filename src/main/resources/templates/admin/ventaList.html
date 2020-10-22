@@ -74,10 +74,26 @@
                     <div class="box">
                         <div class="box-header">
                             <h3 class="box-title">Datos Registrados</h3>
+                            <div class="box-tools pull-right">
+                                <div class="has-feedback">
+                                    <input type="text" class="form-control" id="myInput" placeholder="Ingresa busqueda">
+                                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                                </div>
+                            </div>
+                            <div class="box-body table-responsive no-padding">
+                                <div class="btn-group">
+                                    <button type="button" onclick="filter('Sin registro')" style="background-color: #e64343;color: white; margin-right: 2px !important;"
+                                            class="btn btn-danger">SIN CLIENTE
+                                    </button>
+                                    <button type="button" onclick="filter('hoy')" style="background-color: #594dbb;color: white; margin-right: 2px !important;"
+                                            class="btn btn-danger">HOY
+                                    </button>
+                                    <button type="button" onclick="filter('')" style="background-color: #2d6b14;color: white;"
+                                            class="btn btn-danger">TODOS
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <p style="padding-left: 10px">Puedes Filtrar por cualquier valor si lo necesitas:</p>
-                        <input style="padding-left: 10px" class="form-control" id="myInput" type="text" placeholder="Ingresa busqueda..">
-                        <br>
                         <!-- /.box-header -->
                         <div class="box-body table-responsive no-padding">
                             <table class="table table-hover">
@@ -160,6 +176,19 @@
                 });
             });
         });
+
+        function filter(value) {
+            if (value == "hoy") {
+                var f = new Date();
+                value = f.getDate() + "/" + (f.getMonth() + 1) + "/" + f.getFullYear();
+            }
+
+            document.getElementById("myInput").value = value;
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value.toLowerCase()) > -1)
+            });
+        }
+
     </script>
     <!-- Bootstrap 3.3.7 -->
     <script href="../js/bootstrap/dist/js/bootstrap.min.js" th:src="@{/js/bootstrap/dist/js/bootstrap.min.js}"

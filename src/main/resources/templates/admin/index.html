@@ -21,6 +21,7 @@
         <!-- Theme style -->
         <link th:href="@{/css/AdminLTE.min.css}" href="../../css/AdminLTE.min.css" rel="stylesheet"/>
         <link th:href="@{/css/estilos.css}" href="../../css/estilos.css" rel="stylesheet"/>
+        <link th:href="@{/css/select2/select2.min.css}" href="../../css/select2/select2.min.css" rel="stylesheet"/>
         <!-- Material Design -->
         <link th:href="@{/css/bootstrap-material-design.min.css}" href="../../css/bootstrap-material-design.min.css"
               rel="stylesheet"/>
@@ -271,7 +272,13 @@
     <script type="text/javascript">
         $.widget.bridge('uibutton', $.ui.button);
     </script>
-
+    <script src="../js/select2/select2.min.js" th:src="@{/js/select2/select2.min.js}" th:inline="javascript"/>
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+        })
+    </script>
     <script type="text/javascript">
 
         var nombre = "";
@@ -365,7 +372,7 @@
              cantidad = "";
         });
 
-
+        $('.select2').select2()
     </script>
 
     <!-- Bootstrap 3.3.7 -->
