@@ -79,6 +79,14 @@
 
                         <div class="box-header">
                             <h3 class="box-title">Datos Registrados</h3>
+
+                            <div class="box-tools pull-right">
+                                <div class="has-feedback">
+                                    <input type="text" class="form-control" id="myInput" placeholder="Ingresa busqueda">
+                                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                                </div>
+                            </div>
+
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body table-responsive no-padding">
@@ -91,6 +99,7 @@
                                     <th>Tel</th>
                                     <th>Accion</th>
                                 </tr>
+                                <tbody id="myTable">
                                 <tr th:each="object : ${clientes}">
                                     <td th:text="${object.nombre}"></td>
                                     <td th:text="${object.tipoDocumento}"></td>
@@ -102,6 +111,7 @@
                                         <a th:href="@{${'/cliente/'+object.id+'/remove'}}" style="color: red" class="fa fa-close"></a>
                                     </td>
                                 </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -122,6 +132,18 @@
 
     <script type="text/javascript">
         $.widget.bridge('uibutton', $.ui.button);
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
     </script>
 
     <!-- Bootstrap 3.3.7 -->
