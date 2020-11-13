@@ -6,6 +6,8 @@ import com.example.service.ClienteService;
 import com.example.service.ProveedorService;
 import com.example.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -243,5 +245,27 @@ public class VentasController {
             ventaPedidos.add(pedidoDetalle);
         }
         return ventaPedidos;
+    }
+
+    @RequestMapping(value = "/venta/remove/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity removePedido(@PathVariable("id") String pedido) {
+        List<Venta> pedidoList = ventaService.findAll()
+                                    .stream()
+                                    .filter(venta -> venta.getPedido() == Integer.parseInt(pedido))
+                                    .collect(Collectors.toList());
+        
+        for (Venta venta : pedidoList){
+            int article = venta.getArticle();
+            int cantidad = venta.getCantidad();
+            try{
+                ventaService.remove(venta);
+                articleService.backStock(article, cantidad);
+            }catch (Exception e){
+                return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
+        return new ResponseEntity(HttpStatus.OK);
+
     }
 }

@@ -10,4 +10,6 @@ public interface VentaService {
     public Venta saveVenta(Venta venta);
 
     List<Venta> findAll();
+
+    void remove(Venta venta);
 }

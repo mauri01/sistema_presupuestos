@@ -22,4 +22,9 @@ public class VentaServiceImpl implements VentaService {
     public List<Venta> findAll(){
         return ventaRepository.findAll();
     }
+
+    @Override
+    public void remove (Venta venta){
+        ventaRepository.delete(venta);
+    }
 }
