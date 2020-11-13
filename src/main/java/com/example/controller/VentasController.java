@@ -1,18 +1,15 @@
 package com.example.controller;
 
-import com.example.model.Article;
-import com.example.model.Cliente;
-import com.example.model.Venta;
-import com.example.model.VentasMesModel;
+import com.example.model.*;
 import com.example.service.ArticleService;
 import com.example.service.ClienteService;
 import com.example.service.ProveedorService;
 import com.example.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.text.DateFormat;
@@ -216,5 +213,57 @@ public class VentasController {
         ventasMesModel.setCantidadArticulos(cantidadArticulos);
         ventasMesModel.setCliente(nombreCliente);
         ventasTotales.add(ventasMesModel);
+    }
+
+    @RequestMapping(value="/venta/pedido/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<DetalleVentaPedido> getArticlesByPedido(@PathVariable("id") String id){
+        List<Venta> ventaPedido = ventaService.findAll().stream()
+                .filter(venta -> venta.getPedido() == Integer.valueOf(id))
+                .collect(Collectors.toList());
+
+        List<DetalleVentaPedido> ventaPedidos = new ArrayList<>();
+
+        for(Venta venta : ventaPedido){
+            DetalleVentaPedido pedidoDetalle = new DetalleVentaPedido();
+            Article article = articleService.findbyId(venta.getArticle());
+            float precioArticle = venta.getPrecio();
+            int cantidad = venta.getCantidad();
+            pedidoDetalle.setCantidad(cantidad);
+            pedidoDetalle.setNameArticle(article.getNombre());
+            pedidoDetalle.setPrecioArticle(precioArticle);
+
+            Cliente cliente = clienteService.findbyId(venta.getCliente());
+            if(cliente != null){
+                pedidoDetalle.setCliente(cliente.getNombre());
+            }else{
+                pedidoDetalle.setCliente("Sin registro");
+            }
+
+            ventaPedidos.add(pedidoDetalle);
+        }
+        return ventaPedidos;
+    }
+
+    @RequestMapping(value = "/venta/remove/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity removePedido(@PathVariable("id") String pedido) {
+        List<Venta> pedidoList = ventaService.findAll()
+                .stream()
+                .filter(venta -> venta.getPedido() == Integer.parseInt(pedido))
+                .collect(Collectors.toList());
+
+        for (Venta venta : pedidoList){
+            int article = venta.getArticle();
+            int cantidad = venta.getCantidad();
+            try{
+                ventaService.remove(venta);
+                articleService.backStock(article, cantidad);
+            }catch (Exception e){
+                return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
+        return new ResponseEntity(HttpStatus.OK);
+
     }
 }

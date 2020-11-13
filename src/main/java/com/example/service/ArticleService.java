@@ -10,6 +10,7 @@ public interface ArticleService {
     public List<Article> findAllArticle();
     public Article findbyId(int id);
     public List<Article> findAllArticleActive();
+    void backStock(int idArt, int cantidad);
 
     void descontarStock(String idArt, String cantidad);
 }

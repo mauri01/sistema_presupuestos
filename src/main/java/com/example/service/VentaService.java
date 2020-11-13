@@ -8,6 +8,7 @@ import java.util.List;
 public interface VentaService {
 
     public Venta saveVenta(Venta venta);
+    void remove(Venta venta);
 
     List<Venta> findAll();
 }

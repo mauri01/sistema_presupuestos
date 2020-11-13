@@ -48,4 +48,13 @@ public class ArticleServiceImpl implements ArticleService{
         article.setStock(stockNuevo);
         articleRepository.save(article);
     }
+
+    @Override
+    public void backStock(int idArt, int cantidad){
+        Article article = articleRepository.findById(idArt);
+        int stock = article.getStock();
+        int stockNuevo = stock + (cantidad);
+        article.setStock(stockNuevo);
+        articleRepository.save(article);
+    }
 }
