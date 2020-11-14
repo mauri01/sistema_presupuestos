@@ -125,6 +125,9 @@
                                             <button type="button" class="btn columnasStyle" th:id="${object.id}" title="Cambiar Precio" onclick="myFunction(this.id)" data-toggle="modal" data-target="#modal-default">
                                                 <i class="fa fa-dollar"></i>
                                             </button>
+                                            <button type="button" class="btn columnasStyle" th:id="${object.id}" title="Cambiar Nombre" onclick="myFunction(this.id)" data-toggle="modal" data-target="#modal-default3">
+                                                <i class="fa fa-pencil"></i>
+                                            </button>
                                             <button type="button" class="btn columnasStyle" th:id="${object.id}" title="Codigo de Barras" onclick="myFunction(this.id)" data-toggle="modal" data-target="#modal-default2">
                                                 <i class="fa fa-barcode"></i>
                                             </button>
@@ -191,6 +194,33 @@
                 <!-- /.modal-dialog -->
             </div>
 
+            <div class="modal fade" id="modal-default3">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Renombrar Articulo</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form autocomplete="off" th:action="@{/article/rename}" method="post" name="formulario">
+                                <div class="form-group">
+                                    <label>Ingrese Nuevo Nombre</label>
+                                    <input type="text" name="name" onfocus="this.value=''" th:required="required" class="form-control" id="name" >
+                                    <input type="hidden" name="artId" id="article">
+                                </div>
+                                <p class="text-red" id="errorBarcode" hidden>Debe ingresar un nombre.</p>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Cargar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+
         </section>
     </div>
     <div th:replace="fragments/mainView :: footer"></div>
@@ -204,6 +234,7 @@
         function myFunction(value) {
             $('#idArticle').val(value);
             $('#artId').val(value);
+            $('#article').val(value);
         }
     </script>
     <script href="../js/jquery/dist/jquery.min.js" th:src="@{/js/jquery/dist/jquery.min.js}" th:inline="javascript"/>
@@ -248,7 +279,8 @@
 
         function validarFormulario(e){
             var valor = document.getElementById("barcode").value;
-            if(valor == ""){
+            var nameArt = document.getElementById("name").value;
+            if(valor == "" || nameArt == ""){
                 e.preventDefault();
                 document.getElementById("errorBarcode").value = "";
                 document.getElementById("errorBarcode").style.display = "block"

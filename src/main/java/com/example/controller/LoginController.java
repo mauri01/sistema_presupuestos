@@ -250,6 +250,36 @@ public class LoginController {
 		return modelAndView;
 	}
 
+	@RequestMapping(value="/article/rename")
+	public ModelAndView renameArticle(@RequestParam String name, @RequestParam String artId) throws ParseException {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("admin/stockList");
+		String message = "";
+
+		Optional<Article> existName = articleService.findAllArticle()
+				.stream()
+				.filter(x -> name.equals(x.getNombre()))
+				.findFirst();
+
+		if(!existName.isPresent()){
+			try{
+				Article article = articleService.findbyId(Integer.parseInt(artId));
+				article.setNombre(name);
+				articleService.saveArticle(article);
+				message = "Se realizo el cambio Correctamente";
+			}catch (Exception e){
+				message = "Ocurrio un error, vuelva a intentar";
+			}
+		}else{
+			message = "El nombre ya existe, vuelva a intentar";
+		}
+
+
+		modelAndView.addObject("messageCarga", message);
+		modelAndView.addObject("articles",articleService.findAllArticleActive());
+		return modelAndView;
+	}
+
 	@RequestMapping(value="/article/barcode")
 	public ModelAndView changeBarcode(@RequestParam String barcode, @RequestParam String artId) throws ParseException {
 		ModelAndView modelAndView = new ModelAndView();
@@ -276,7 +306,7 @@ public class LoginController {
 
 
 		modelAndView.addObject("messageCarga", message);
-		modelAndView.addObject("articles",articleService.findAllArticle());
+		modelAndView.addObject("articles",articleService.findAllArticleActive());
 		return modelAndView;
 	}
 
