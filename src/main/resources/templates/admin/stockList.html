@@ -118,7 +118,7 @@
                                         <td th:text="${object.medida}"></td>
                                         <td th:if="${object.stock <= 0}" style="color: red">Sin Stock</td>
                                         <td th:if="${object.stock > 0}" th:text="${object.stock}"></td>
-                                        <td th:text="'$ '+${object.precioVenta}"></td>
+                                        <td th:text="${moneda}+' '+${object.precioVenta}"></td>
                                         <td>
                                             <a th:href="@{${'/admin/cargarstock/'+object.id}}" data-toggle="tooltip" style="padding-right: 10px;" title="Cargar Stock" class="fa  fa-plus columnasStyle"></a>
                                             <a th:href="@{${'/admin/deleteArticle/'+object.id}}" data-toggle="tooltip" style="padding-right: 10px; color: red;" title="Eliminar Articulo" class="fa  fa-remove columnasStyle"></a>

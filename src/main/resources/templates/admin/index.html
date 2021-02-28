@@ -197,7 +197,7 @@
 
                             <div class="box-footer">
                                 <a class="product-title">TOTAL A PAGAR
-                                    <span style="font-size: 15px !important;" id="totalPago" class="label label-success pull-right">$ 0</span>
+                                    <span style="font-size: 15px !important;" id="totalPago" class="label label-success pull-right"> 0</span>
                                 </a>
                             </div>
 
@@ -235,7 +235,7 @@
 
                                 <div class="info-box-content">
                                     <span style="font-size: 35px !important;" class="info-box-number" th:text="${totalVentaAmostrar} ?: 0"></span>
-                                    <span class="info-box-text">PAGO TOTAL</span>
+                                    <span th:if="${negocio}" class="info-box-text" th:text="'PAGO TOTAL en '+${negocio.nombreMoneda} ?: 'Pesos'"></span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
@@ -361,7 +361,7 @@
                         $("#menu").append('<div id="div_'+idArt+'_'+numDiv+'" class="product-info">' +
                             '<button type="button" class="close" id="'+idArt+'_'+numDiv+'" onclick="functionDeleteVenta(id)" data-dismiss="alert" aria-hidden="true">×</button>' +
                             '<a class="product-title" text="" > '+ nombre +
-                            '<span style="font-size: 15px !important;" class="label label-warning pull-right">$'+total+'</span>' +
+                            '<span style="font-size: 15px !important;" class="label label-warning pull-right">'+total+'</span>' +
                             '</a> ' +
                             '   <span class="product-description">'+cantidad+'*'+precio+' </span> ' +
                             '</div>');
@@ -380,7 +380,7 @@
                     document.getElementById("errorCargar").style.display = 'block';
                 }
 
-                document.getElementById("totalPago").innerHTML = "$"+totalApagar;
+                document.getElementById("totalPago").innerHTML = totalApagar;
 
                 document.getElementById('article').getElementsByTagName('option')[0].selected = 'selected';
                 document.getElementById('precio').value = "";
@@ -439,7 +439,7 @@
             }
 
             document.getElementById("totalApagarVenta").value = valorTotalFinal;
-            document.getElementById("totalPago").innerHTML = "$"+totalPesos;
+            document.getElementById("totalPago").innerHTML = totalPesos;
             totalApagar = totalPesos;
         }
         

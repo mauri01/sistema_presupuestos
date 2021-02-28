@@ -83,6 +83,11 @@ public class DocumentController {
             modelAndView.addObject("negocio", new Negocio());
         }
 
+        String moneda = "$";
+        if(negocio.isPresent() && negocio.get().getSimboloMoneda() != null){
+            moneda = negocio.get().getSimboloMoneda();
+        }
+        modelAndView.addObject("moneda", moneda);
         modelAndView.setViewName("admin/imprimirTicket");
         return modelAndView;
 

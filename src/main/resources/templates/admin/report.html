@@ -182,7 +182,7 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3 th:text="'$'+${gananciasTotales}"></h3>
+              <h3 th:text="${moneda}+' '+${gananciasTotales}"></h3>
               <p>Ganancias del Mes</p>
             </div>
             <div class="icon">
@@ -195,7 +195,7 @@
           <!-- small box -->
           <div class="small-box bg-yellow">
             <div class="inner">
-              <h3 th:text="'$'+${gastosTotales}"></h3>
+              <h3 th:text="${moneda}+' '+${gastosTotales}"></h3>
               <p>Gastos del Mes</p>
             </div>
             <div class="icon">
@@ -208,7 +208,7 @@
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3 th:text="'$'+${balance}"></h3>
+              <h3 th:text="${moneda}+' '+${balance}"></h3>
               <p>Balance</p>
             </div>
             <div class="icon">
@@ -265,7 +265,7 @@
               <div class="col-sm-3 col-xs-6">
                 <div class="description-block border-right">
                   <span class="description-percentage text-green">Total Ventas Realizadas</span>
-                  <h5 class="description-header" th:text="'$' + ${gananciasTotalesAnio}"></h5>
+                  <h5 class="description-header" th:text="${moneda}+' '+ ${gananciasTotalesAnio}"></h5>
                   <span class="description-text">GANANCIAS AÑO</span>
                 </div>
                 <!-- /.description-block -->
@@ -274,13 +274,13 @@
               <div class="col-sm-3 col-xs-6">
                 <div class="description-block">
                   <span class="description-percentage text-green"  th:inline="text">
-                    <i class="fa fa-caret-up"></i> [['$'+ ${gananciasTotalesAnio}]]
+                    <i class="fa fa-caret-up"></i> [[${moneda}+' '+ ${gananciasTotalesAnio}]]
                   </span>
                   <span>/ /</span>
                   <span class="description-percentage text-red"  th:inline="text">
-                    <i class="fa fa-caret-down"></i> [['$'+ ${gastosTotalesAnio}]]
+                    <i class="fa fa-caret-down"></i> [[${moneda}+' '+ ${gastosTotalesAnio}]]
                   </span>
-                  <h5 class="description-header" th:text="'$'+ ${balanceAnio}"></h5>
+                  <h5 class="description-header" th:text="${moneda}+' '+ ${balanceAnio}"></h5>
                   <span class="description-text">BALANCE AÑO</span>
                 </div>
               </div>
@@ -300,7 +300,7 @@
             <div class="box-header with-border">
               <i class="fa fa-bar-chart-o"></i>
 
-              <h3 class="box-title">Compras Realizadas ($)</h3>
+              <h3 class="box-title" th:text="'Compras Realizadas ('+${moneda}+')'"></h3>
 
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -321,7 +321,7 @@
             <div class="box-header with-border">
               <i class="fa fa-bar-chart-o"></i>
 
-              <h3 class="box-title">Ventas Realizadas ($)</h3>
+              <h3 class="box-title" th:text="'Ventas Realizadas ('+${moneda}+')'" ></h3>
 
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>

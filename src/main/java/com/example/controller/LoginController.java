@@ -230,86 +230,6 @@ public class LoginController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value="/article/price")
-	public ModelAndView changePrice(@RequestParam String precioVenta, @RequestParam String idArticle) throws ParseException {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("admin/stockList");
-		String message = "";
-
-		try{
-			Article article = articleService.findbyId(Integer.parseInt(idArticle));
-			article.setPrecioVenta(Float.parseFloat(precioVenta));
-			articleService.saveArticle(article);
-			message = "Se realizo el cambio Correctamente";
-		}catch (Exception e){
-			message = "Ocurrio un error, vuelva a intentar";
-		}
-
-		modelAndView.addObject("messageCarga", message);
-		modelAndView.addObject("articles",articleService.findAllArticleActive());
-		return modelAndView;
-	}
-
-	@RequestMapping(value="/article/rename")
-	public ModelAndView renameArticle(@RequestParam String name, @RequestParam String artId) throws ParseException {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("admin/stockList");
-		String message = "";
-
-		Optional<Article> existName = articleService.findAllArticle()
-				.stream()
-				.filter(x -> name.equals(x.getNombre()))
-				.findFirst();
-
-		if(!existName.isPresent()){
-			try{
-				Article article = articleService.findbyId(Integer.parseInt(artId));
-				article.setNombre(name);
-				articleService.saveArticle(article);
-				message = "Se realizo el cambio Correctamente";
-			}catch (Exception e){
-				message = "Ocurrio un error, vuelva a intentar";
-			}
-		}else{
-			message = "El nombre ya existe, vuelva a intentar";
-		}
-
-
-		modelAndView.addObject("messageCarga", message);
-		modelAndView.addObject("articles",articleService.findAllArticleActive());
-		return modelAndView;
-	}
-
-	@RequestMapping(value="/article/barcode")
-	public ModelAndView changeBarcode(@RequestParam String barcode, @RequestParam String artId) throws ParseException {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("admin/stockList");
-		String message = "";
-
-		Optional<Article> existBarcode = articleService.findAllArticle()
-				.stream()
-				.filter(x -> barcode.equals(x.getCodigoBarra()))
-				.findFirst();
-
-		if(!existBarcode.isPresent()){
-			try{
-				Article article = articleService.findbyId(Integer.parseInt(artId));
-				article.setCodigoBarra(barcode);
-				articleService.saveArticle(article);
-				message = "Se realizo el cambio Correctamente";
-			}catch (Exception e){
-				message = "Ocurrio un error, vuelva a intentar";
-			}
-		}else{
-			message = "El codigo de barra ya existe.";
-		}
-
-
-		modelAndView.addObject("messageCarga", message);
-		modelAndView.addObject("articles",articleService.findAllArticleActive());
-		return modelAndView;
-	}
-
 	@RequestMapping(value="/article", method = RequestMethod.POST)
 	public ModelAndView addArticle(@Valid Article article){
 		ModelAndView modelAndView = new ModelAndView();
@@ -332,6 +252,10 @@ public class LoginController {
 			article.setPrecioVenta(Float.parseFloat("0"));
 			articleService.saveArticle(article);
 			message = "El Artículo fue creado de forma correcta";
+		}else if(!articleCreated.isActive()){
+			articleCreated.setActive(true);
+			articleService.saveArticle(articleCreated);
+			message = "El Artículo YA existía, fue activado nuevamente.";
 		}else{
 			messageError = "El nombre del Artículo o codigo de barra ya existe.";
 		}

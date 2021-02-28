@@ -2,20 +2,25 @@ package com.example.controller;
 
 import com.example.model.Article;
 import com.example.model.Compra;
+import com.example.model.Negocio;
 import com.example.service.ArticleService;
 import com.example.service.CompraService;
+import com.example.service.NegocioService;
 import com.example.service.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 @Controller
 public class StockController {
@@ -28,6 +33,9 @@ public class StockController {
 
     @Autowired
     private CompraService compraService;
+
+    @Autowired
+    private NegocioService negocioService;
 
     @RequestMapping(value="/admin/stock", method = RequestMethod.GET)
     public ModelAndView stock(){
@@ -45,6 +53,115 @@ public class StockController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/stockList");
 
+        Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
+        String moneda = "$";
+        if(negocio.isPresent() && negocio.get().getSimboloMoneda() != null){
+            moneda = negocio.get().getSimboloMoneda();
+        }
+
+        modelAndView.addObject("moneda",moneda);
+        modelAndView.addObject("articles",articleService.findAllArticleActive());
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/article/barcode")
+    public ModelAndView changeBarcode(@RequestParam String barcode, @RequestParam String artId) throws ParseException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/stockList");
+        String message = "";
+
+        Optional<Article> existBarcode = articleService.findAllArticle()
+                .stream()
+                .filter(x -> barcode.equals(x.getCodigoBarra()))
+                .findFirst();
+
+        if(!existBarcode.isPresent()){
+            try{
+                Article article = articleService.findbyId(Integer.parseInt(artId));
+                article.setCodigoBarra(barcode);
+                articleService.saveArticle(article);
+                message = "Se realizo el cambio Correctamente";
+            }catch (Exception e){
+                message = "Ocurrio un error, vuelva a intentar";
+            }
+        }else{
+            message = "El codigo de barra ya existe.";
+        }
+
+        Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
+        String moneda = "$";
+        if(negocio.isPresent() && negocio.get().getSimboloMoneda() != null){
+            moneda = negocio.get().getSimboloMoneda();
+        }
+
+        modelAndView.addObject("moneda",moneda);
+
+        modelAndView.addObject("messageCarga", message);
+        modelAndView.addObject("articles",articleService.findAllArticleActive());
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/article/price")
+    public ModelAndView changePrice(@RequestParam String precioVenta, @RequestParam String idArticle) throws ParseException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/stockList");
+        String message = "";
+
+        try{
+            Article article = articleService.findbyId(Integer.parseInt(idArticle));
+            article.setPrecioVenta(Float.parseFloat(precioVenta));
+            articleService.saveArticle(article);
+            message = "Se realizo el cambio Correctamente";
+        }catch (Exception e){
+            message = "Ocurrio un error, vuelva a intentar";
+        }
+
+        Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
+        String moneda = "$";
+        if(negocio.isPresent() && negocio.get().getSimboloMoneda() != null){
+            moneda = negocio.get().getSimboloMoneda();
+        }
+
+        modelAndView.addObject("moneda",moneda);
+
+        modelAndView.addObject("messageCarga", message);
+        modelAndView.addObject("articles",articleService.findAllArticleActive());
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/article/rename")
+    public ModelAndView renameArticle(@RequestParam String name, @RequestParam String artId) throws ParseException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/stockList");
+        String message = "";
+
+        Optional<Article> existName = articleService.findAllArticle()
+                .stream()
+                .filter(x -> name.equals(x.getNombre()))
+                .findFirst();
+
+        if(!existName.isPresent()){
+            try{
+                Article article = articleService.findbyId(Integer.parseInt(artId));
+                article.setNombre(name);
+                articleService.saveArticle(article);
+                message = "Se realizo el cambio Correctamente";
+            }catch (Exception e){
+                message = "Ocurrio un error, vuelva a intentar";
+            }
+        }else{
+            message = "El nombre ya existe, vuelva a intentar";
+        }
+
+        Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
+        String moneda = "$";
+        if(negocio.isPresent() && negocio.get().getSimboloMoneda() != null){
+            moneda = negocio.get().getSimboloMoneda();
+        }
+
+        modelAndView.addObject("moneda",moneda);
+
+        modelAndView.addObject("messageCarga", message);
         modelAndView.addObject("articles",articleService.findAllArticleActive());
         return modelAndView;
     }

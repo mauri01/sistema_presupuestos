@@ -1,10 +1,7 @@
 package com.example.controller;
 
 import com.example.model.*;
-import com.example.service.ArticleService;
-import com.example.service.ClienteService;
-import com.example.service.ProveedorService;
-import com.example.service.VentaService;
+import com.example.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +32,10 @@ public class VentasController {
 
     @Autowired
     private ClienteService clienteService;
+
+
+    @Autowired
+    private NegocioService negocioService;
 
     @RequestMapping("/ventas")
     public ModelAndView process(@RequestParam String sourceText, @RequestParam String clienteID) throws ParseException {
@@ -95,6 +96,8 @@ public class VentasController {
         modelAndView.addObject("stockDisponible", stockDisponible);
         modelAndView.addObject("totalVentaAmostrar",totalVenta);
         modelAndView.addObject("idPedido",idPedido);
+        Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
+        negocio.ifPresent(negocio1 -> modelAndView.addObject("negocio", negocio1));
         return modelAndView;
     }
 
@@ -191,6 +194,14 @@ public class VentasController {
 
             }
         }
+
+        Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
+        String moneda = "$";
+        if(negocio.isPresent() && negocio.get().getSimboloMoneda() != null){
+            moneda = negocio.get().getSimboloMoneda();
+        }
+
+        modelAndView.addObject("moneda",moneda);
         modelAndView.addObject("listaVentasTotales", ventasTotales);
         return modelAndView;
     }

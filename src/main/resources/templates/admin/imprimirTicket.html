@@ -77,7 +77,7 @@
         <tr>
             <th class="cantidad">CANT</th>
             <th class="producto">PRODUCTO</th>
-            <th class="precio">$$</th>
+            <th class="precio" th:text="${moneda}"></th>
         </tr>
         </thead>
         <tbody>
@@ -89,7 +89,7 @@
         <tr>
             <br>
             <td class="cantidad" style="font-size: 10px !important;">TOTAL</td>
-            <td class="producto" th:text="'$'+${totalVenta}"></td>
+            <td class="producto" th:text="${moneda}+ ' ' +${totalVenta}"></td>
             <td class="precio"></td>
         </tr>
         </tbody>

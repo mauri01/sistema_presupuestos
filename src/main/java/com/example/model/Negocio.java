@@ -26,6 +26,12 @@ public class Negocio {
     @Column(name = "web")
     private String web;
 
+    @Column(name = "simbolo_moneda", nullable = false)
+    private String simboloMoneda = "$";
+
+    @Column(name = "nombre_moneda", nullable = false)
+    private String nombreMoneda = "Pesos";
+
     public int getId() {
         return id;
     }
@@ -72,5 +78,21 @@ public class Negocio {
 
     public void setWeb(String web) {
         this.web = web;
+    }
+
+    public String getSimboloMoneda() {
+        return simboloMoneda;
+    }
+
+    public void setSimboloMoneda(String simboloMoneda) {
+        this.simboloMoneda = simboloMoneda;
+    }
+
+    public String getNombreMoneda() {
+        return nombreMoneda;
+    }
+
+    public void setNombreMoneda(String nombreMoneda) {
+        this.nombreMoneda = nombreMoneda;
     }
 }

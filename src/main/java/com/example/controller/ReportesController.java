@@ -2,9 +2,11 @@ package com.example.controller;
 
 import com.example.model.Article;
 import com.example.model.Compra;
+import com.example.model.Negocio;
 import com.example.model.Venta;
 import com.example.service.ArticleService;
 import com.example.service.CompraService;
+import com.example.service.NegocioService;
 import com.example.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,9 @@ public class ReportesController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private NegocioService negocioService;
 
     public static int MES = 0;
     public static int ANIO = 1;
@@ -65,6 +70,11 @@ public class ReportesController {
         Article articuloAnio = articleService.findbyId(articuloMasVendidoDelAnio);
         String articuloAnioNombre = articuloAnio == null ? "Sin Ventas" : articuloAnio.getNombre();
 
+        Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
+        String moneda = "$";
+        if(negocio.isPresent() && negocio.get().getSimboloMoneda() != null){
+            moneda = negocio.get().getSimboloMoneda();
+        }
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("gastosTotales", gastosTotales);
@@ -77,6 +87,7 @@ public class ReportesController {
         modelAndView.addObject("gananciasTotalesAnio",gananciasTotalesAnio);
         modelAndView.addObject("balanceAnio",balanceAnio);
         modelAndView.addObject("gastosTotalesAnio",gastosTotalesAnio);
+        modelAndView.addObject("moneda",moneda);
         modelAndView.setViewName("admin/report");
         return modelAndView;
     }
