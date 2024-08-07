@@ -4,22 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c018f618-7e65-4a6b-8a79-9cd97e2c1356" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/db/db_structure.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/db/insert_roles.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/beer.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/login.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/patterns/user-panel-bg_blue.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/patterns/user-panel-bg_green.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/patterns/user-panel-bg_purple.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/patterns/user-panel-bg_red.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/patterns/user-panel-bg_yellow.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/user-160x160.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/user2-160x160.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/user3-128x128.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/user4-128x128.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/mainView.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/mainView.html" afterDir="false" />
-    </list>
+    <list default="true" id="c018f618-7e65-4a6b-8a79-9cd97e2c1356" name="Default" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
