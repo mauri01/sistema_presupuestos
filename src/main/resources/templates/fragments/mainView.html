@@ -5,9 +5,9 @@
         <!-- Logo -->
         <a th:href="@{/admin/home}" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>VTS</b></span>
+            <span class="logo-mini"><b>PRES</b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">Ven<b>TAS</b></span>
+            <span class="logo-lg"><b>PRES</b>upuestos</span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -21,9 +21,9 @@
 
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li>
+                    <!--<li>
                         <a th:href="@{/admin/user}"><i class="fa fa-user"></i></a>
-                    </li>
+                    </li>-->
                     <li>
                         <a th:href="@{/logout}"><i class="fa fa-close"></i></a>
                     </li>
@@ -51,15 +51,6 @@
                 <li class="header">MENU DE NAVEGACION</li>
                 <li><a th:href="@{/admin/home}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                 <li><a th:href="@{/admin/minegocio}"><i class="fa fa-home"></i> <span>Mi Negocio</span></a></li>
-               <!-- <li><a th:href="@{/admin/target}"><i class="fa fa-upload"></i> <span>Targets</span></a></li>
-                <li>
-                    <a href="../../../../../../MaterialAdminLTE-master/pages/widgets.html">
-                        <i class="fa fa-th"></i> <span>Widgets</span>
-                        <span class="pull-right-container">
-                  <small class="label pull-right bg-green">new</small>
-                </span>
-                    </a>
-                </li>-->
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-upload"></i>
@@ -69,9 +60,10 @@
                 </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a th:href="@{/admin/article}"><i class="ion ion-bag"></i> <span>Artículo</span></a></li>
+                        <li><a th:href="@{/admin/priceList}"><i class="ion ion-android-document"></i> <span>Lista de Precios</span></a></li>
+                        <!--<li><a th:href="@{/admin/article}"><i class="ion ion-bag"></i> <span>Artículo</span></a></li>
                         <li><a th:href="@{/admin/proveedor}"><i class="fa fa-truck"></i> <span>Proveedor</span></a></li>
-                        <li><a th:href="@{/admin/stock}"><i class="fa fa-cubes"></i> <span>Stock</span></a></li>
+                        <li><a th:href="@{/admin/stock}"><i class="fa fa-cubes"></i> <span>Stock</span></a></li>-->
                     </ul>
                 </li>
 
@@ -90,7 +82,7 @@
                 </li>
 
 
-                <li><a th:href="@{/admin/document}"><i class="fa fa-book"></i> <span>Guia</span></a></li>
+                <!--<li><a th:href="@{/admin/document}"><i class="fa fa-book"></i> <span>Guia</span></a></li>-->
                 <li><a th:href="@{/admin/faq}"><i class="fa fa-question"></i> <span>Ayuda</span></a></li>
                <!-- <li class="treeview">
                     <a href="#">
@@ -181,9 +173,10 @@
     <div th:fragment="footer">
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <b>Version</b> PRO
+                <b>Version</b> 0.1
             </div>
-            <strong>VenTaS </strong><a href="https://drive.google.com/drive/folders/1pB3Fh7of8IO6KKe9VDFk-Vmve5j7VGW6?usp=sharing" target="_blank">Más información</a>
+            <strong>Presupuestos</strong>
+            <!-- <a href="#" target="_blank">Más información</a>-->
         </footer>
     </div>
 <!-- //  -->

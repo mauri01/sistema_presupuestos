@@ -29,6 +29,9 @@ public class Cliente {
     @Column(name = "active" ,columnDefinition="boolean default true")
     private boolean active=true;
 
+    @Column(name = "from_user")
+    private int fromUser;
+
     public int getId() {
         return id;
     }
@@ -83,5 +86,13 @@ public class Cliente {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public int getFromUser() {
+        return fromUser;
+    }
+
+    public void setFromUser(int fromUser) {
+        this.fromUser = fromUser;
     }
 }

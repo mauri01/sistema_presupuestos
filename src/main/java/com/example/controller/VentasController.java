@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,25 +21,20 @@ import java.util.stream.Collectors;
 
 @Controller
 public class VentasController {
-
-    @Autowired
-    private ArticleService articleService;
-
     @Autowired
     private VentaService ventaService;
 
     @Autowired
-    private ProveedorService proveedorService;
-
-    @Autowired
     private ClienteService clienteService;
-
 
     @Autowired
     private NegocioService negocioService;
 
+    @Autowired
+    private PriceListService priceListService;
+
     @RequestMapping("/ventas")
-    public ModelAndView process(@RequestParam String sourceText, @RequestParam String clienteID) throws ParseException {
+    public ModelAndView process(@RequestParam String sourceText, @RequestParam String clienteID) throws ParseException, IOException {
         int idPedido = 0;
         String fecha = "";
         String messageVenta = "";
@@ -58,45 +54,43 @@ public class VentasController {
                 String idArt = datosIndividual[0];
                 String precio = datosIndividual[1];
                 String cantidad = datosIndividual[2];
+                String unidad = datosIndividual[4];
                 try {
-                    idPedido = registrarCompra(idArt, precio, cantidad, idPedido, fecha, clienteID);
-                    articleService.descontarStock(idArt, cantidad);
+                    idPedido = registrarCompra(idArt, precio, cantidad, idPedido, fecha, clienteID, unidad);
+                    //articleService.descontarStock(idArt, cantidad);
                     totalVenta = totalVenta + (Float.parseFloat(precio)*Integer.parseInt(cantidad));
                 } catch (Exception e) {
-                    messageVenta = "Surgio un error al Cargar la venta Intente de Nuevo";
+                    messageVenta = "Surgio un error al Cargar los datos Intente de Nuevo";
                     modelAndView.addObject("messageVenta", messageVenta);
                     return modelAndView;
                 }
             }
             //--- Fin de Registo Articulos
-            messageVenta = "La venta se registro con Exito";
+            messageVenta = "El presupuesto se registro con Exito";
         }else{
-            messageVenta = "No es posible realizar la venta.";
+            messageVenta = "No es posible realizar el presupuesto.";
         }
 
 
         DateFormat hourdateFormat = new SimpleDateFormat("MMMM");
         String fechaMes = hourdateFormat.format(new Date());
-        countVentas = getCountVentasFecha(countVentas);
-        stockDisponible = getStockDisponible();
+        //countVentas = getCountVentasFecha(countVentas);
+        //stockDisponible = getStockDisponible();
         List<Cliente> clientes = clienteService.findAll();
-
-        List<Article> allArticles = articleService.findAllArticleActive();
-        modelAndView.addObject("provTotal",proveedorService.findAll());
         modelAndView.addObject("fechaMes",fechaMes);
-        modelAndView.addObject("articles", allArticles);
         modelAndView.addObject("clientes", clientes.stream()
                 .filter(Cliente::isActive)
                 .collect(Collectors.toList()));
         modelAndView.setViewName("admin/index");
 
-
+        List<Price> priceList = priceListService.findExcelPrices("1.xlsx");
         modelAndView.addObject("messageVenta", messageVenta);
         modelAndView.addObject("countVentas", countVentas);
         modelAndView.addObject("stockDisponible", stockDisponible);
         modelAndView.addObject("totalVentaAmostrar",totalVenta);
         modelAndView.addObject("idPedido",idPedido);
         Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
+        modelAndView.addObject("priceList", priceList);
         negocio.ifPresent(negocio1 -> modelAndView.addObject("negocio", negocio1));
         return modelAndView;
     }
@@ -125,20 +119,11 @@ public class VentasController {
         return countVentas;
     }
 
-    public String getStockDisponible() {
-        String stockMessage = "-";
-        List<Article> stockDisponible = articleService.findAllArticle().stream()
-                .filter(article -> article.getStock() > 0).collect(Collectors.toList());
-        if(stockDisponible.size() != 0){
-            stockMessage = "+";
-        }
-        return stockMessage;
-    }
-
-    private int registrarCompra(String idArt, String precio, String cantidad, int idPedido, String fecha, String clienteID) {
+    private int registrarCompra(String idArt, String precio, String cantidad, int idPedido, String fecha, String clienteID, String unidad) {
         Venta venta = new Venta();
         venta.setArticle(Integer.parseInt(idArt));
         venta.setCantidad(Integer.parseInt(cantidad));
+        venta.setUnidad(unidad);
         venta.setPrecio(Float.parseFloat(precio));
         if(!clienteID.equals("")){
             venta.setCliente(Integer.parseInt(clienteID));
@@ -239,11 +224,9 @@ public class VentasController {
 
         for(Venta venta : ventaPedido){
             DetalleVentaPedido pedidoDetalle = new DetalleVentaPedido();
-            Article article = articleService.findbyId(venta.getArticle());
             float precioArticle = venta.getPrecio();
             int cantidad = venta.getCantidad();
             pedidoDetalle.setCantidad(cantidad);
-            pedidoDetalle.setNameArticle(article.getNombre());
             pedidoDetalle.setPrecioArticle(precioArticle);
 
             Cliente cliente = clienteService.findbyId(venta.getCliente());
@@ -256,27 +239,5 @@ public class VentasController {
             ventaPedidos.add(pedidoDetalle);
         }
         return ventaPedidos;
-    }
-
-    @RequestMapping(value = "/venta/remove/{id}", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity removePedido(@PathVariable("id") String pedido) {
-        List<Venta> pedidoList = ventaService.findAll()
-                                    .stream()
-                                    .filter(venta -> venta.getPedido() == Integer.parseInt(pedido))
-                                    .collect(Collectors.toList());
-        
-        for (Venta venta : pedidoList){
-            int article = venta.getArticle();
-            int cantidad = venta.getCantidad();
-            try{
-                ventaService.remove(venta);
-                articleService.backStock(article, cantidad);
-            }catch (Exception e){
-                return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
-            }
-        }
-        return new ResponseEntity(HttpStatus.OK);
-
     }
 }

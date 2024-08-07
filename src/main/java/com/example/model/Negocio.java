@@ -32,6 +32,13 @@ public class Negocio {
     @Column(name = "nombre_moneda", nullable = false)
     private String nombreMoneda = "Pesos";
 
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Lob
+    @Column(name = "logo")
+    private byte[] logo;
+
     public int getId() {
         return id;
     }
@@ -94,5 +101,21 @@ public class Negocio {
 
     public void setNombreMoneda(String nombreMoneda) {
         this.nombreMoneda = nombreMoneda;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public byte[] getLogo() {
+        return logo;
+    }
+
+    public void setLogo(byte[] logo) {
+        this.logo = logo;
     }
 }

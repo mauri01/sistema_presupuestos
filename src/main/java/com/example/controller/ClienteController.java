@@ -4,7 +4,11 @@ import com.example.model.Cliente;
 import com.example.model.Role;
 import com.example.model.User;
 import com.example.service.ClienteService;
+import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +26,9 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @Autowired
+    private UserService userService;
+
     @RequestMapping(value="/admin/cliente", method = RequestMethod.GET)
     public ModelAndView clientes(){
         ModelAndView modelAndView = new ModelAndView();
@@ -38,7 +45,8 @@ public class ClienteController {
         modelAndView.setViewName("admin/cliente");
         String messageError = null;
         String message = null;
-
+        User user = getUserAuth();
+        cliente.setFromUser(user.getId());
         Cliente clienteCreated = clienteService.findbyDni(cliente.getNumDocumento());
 
         if(clienteCreated == null){
@@ -66,8 +74,9 @@ public class ClienteController {
         modelAndView.setViewName("admin/clientes");
 
         List<Cliente> clientes = clienteService.findAll();
+        User user = getUserAuth();
         modelAndView.addObject("clientes",clientes.stream()
-                .filter(Cliente::isActive)
+                .filter(cliente -> cliente.getFromUser() == user.getId() && cliente.isActive())
                 .collect(Collectors.toList()));
         return modelAndView;
     }
@@ -99,5 +108,18 @@ public class ClienteController {
                 .collect(Collectors.toList()));
         modelAndView.setViewName("admin/clientes");
         return modelAndView;
+    }
+
+    private User getUserAuth() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            username = userDetails.getUsername();
+
+        } else if (authentication != null) {
+            username = authentication.getPrincipal().toString();
+        }
+        return userService.findUserByEmail(username);
     }
 }

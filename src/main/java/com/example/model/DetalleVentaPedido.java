@@ -6,6 +6,7 @@ public class DetalleVentaPedido {
     private float precioArticle;
     private int cantidad;
     private String cliente;
+    private String unidad;
 
     public String getNameArticle() {
         return nameArticle;
@@ -37,5 +38,13 @@ public class DetalleVentaPedido {
 
     public void setCliente(String cliente) {
         this.cliente = cliente;
+    }
+
+    public String getUnidad() {
+        return unidad;
+    }
+
+    public void setUnidad(String unidad) {
+        this.unidad = unidad;
     }
 }

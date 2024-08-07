@@ -20,6 +20,9 @@ public class Venta {
     @Column(name = "cantidad")
     private int cantidad;
 
+    @Column(name = "unidad")
+    private String unidad;
+
     @Column(name = "precio")
     private float precio;
 
@@ -59,6 +62,14 @@ public class Venta {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public String getUnidad() {
+        return unidad;
+    }
+
+    public void setUnidad(String unidad) {
+        this.unidad = unidad;
     }
 
     public float getPrecio() {

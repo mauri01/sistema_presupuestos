@@ -66,9 +66,8 @@
         <!-- Main content -->
         <section class="content">
             <!-- Small boxes (Stat box) -->
-            <div class="row">
+            <!--<div class="row">
                 <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
                     <div class="small-box bg-aqua">
                         <div class="inner">
                             <h3 th:text="${countVentas}"></h3>
@@ -80,9 +79,8 @@
                         <a th:href="@{${'/admin/ventas-list'}}" class="small-box-footer">Ver Ventas <i class="fa fa-arrow-circle-right"></i></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
+
                 <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
                     <div class="small-box bg-green">
                         <div class="inner">
                             <h3 th:text="${stockDisponible}"><sup style="font-size: 20px"></sup></h3>
@@ -94,9 +92,8 @@
                         <a th:href="@{${'/admin/stock-list'}}" class="small-box-footer">Ver stock <i class="fa fa-arrow-circle-right"></i></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
+
                 <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
                     <div class="small-box bg-yellow">
                         <div class="inner">
                             <h3 th:text="${provTotal.size()}"></h3>
@@ -108,9 +105,7 @@
                         <a th:href="@{${'/admin/proveedor-list'}}" class="small-box-footer">Ver proveedores <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
                 <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
                     <div class="small-box bg-red">
                         <div class="inner">
                             <h3 th:text="${fechaMes}"></h3>
@@ -122,13 +117,18 @@
                         <a th:href="@{${'/admin/reportes'}}" class="small-box-footer">Mas Informacion <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="row">
                 <div class="col-md-6">
-
                     <div class="box box-danger">
+                        <div th:if="${messageLista}" class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <h4><i class="icon fa fa-exclamation-triangle"></i> Error!</h4>
+                            <p th:text="${messageLista}"></p>
+                            <a id="ref">Ir a registro de precios</a>
+                        </div>
                         <div class="box-header">
-                            <h3 class="box-title">Cargar Venta</h3>
+                            <h3 class="box-title">Cargar Presupuesto</h3>
                         </div>
                         <div class="box-body">
 
@@ -142,11 +142,11 @@
                             </div>
 
                             <div style="margin-top: 5px !important;" class="form-group">
-                                <label>Artículo</label>
+                                <label>Item</label>
                                 <select class="form-control select2" id="article" onChange="myFunction(this.options[this.selectedIndex].value)"  style="width: 100%;">
-                                    <option>Seleccione Art</option>
-                                    <option th:each="articles : ${articles}"
-                                            th:value="${articles.id+'_'+articles.codigoBarra}" th:text="${articles.nombre}"></option>
+                                    <option>Seleccione Item</option>
+                                    <option th:each="priceList : ${priceList}"
+                                            th:value="${priceList.id}" th:text="${priceList.nombre}"></option>
                                 </select>
                             </div>
 
@@ -155,11 +155,15 @@
                                 <input id="cantidadNum"  type="number" onchange="recibir()" class="form-control">
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Precio</label>
                                 <input id="precio" type="number" step="0.01" class="form-control">
                             </div>
-                            <span id="descripcion" class="product-description"></span>
+
+                            <div class="col-md-2">
+                                <label>Unidad</label>
+                                <input id="unidadNum" class="form-control">
+                            </div>
                         </div>
 
                         <div id="errorCargar" style="display: none" class="alert alert-danger alert-dismissible">
@@ -183,9 +187,9 @@
                             <p th:text="${messageVenta}"></p>
                         </div>
                         <div class="box-header">
-                            <h3 class="box-title">Realizar Venta</h3>
+                            <h3 class="box-title">Realizar Presupuesto</h3>
                             <br>
-                            <small>Aqui verá todos los Articulos</small>
+                            <small>Aqui verá todos los Items</small>
                         </div>
 
                         <div class="box-body">
@@ -196,7 +200,7 @@
                             </div>
 
                             <div class="box-footer">
-                                <a class="product-title">TOTAL A PAGAR
+                                <a class="product-title">IMPORTE TOTAL
                                     <span style="font-size: 15px !important;" id="totalPago" class="label label-success pull-right"> 0</span>
                                 </a>
                             </div>
@@ -206,7 +210,7 @@
                             <input id="totalApagarVenta" type="hidden" name="sourceText">
                             <input id="clienteID" type="hidden" name="clienteID">
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-primary">Realizar Venta</button>
+                                <button type="submit" class="btn btn-primary">Generar Presupuesto</button>
                             </div>
                         </form>
                         <!-- /.box-body -->
@@ -226,7 +230,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">FINALIZAR VENTA</h4>
+                        <h4 class="modal-title">FINALIZAR PRESUPUESTO</h4>
                     </div>
                     <div class="modal-body">
                         <div>
@@ -240,39 +244,47 @@
                                 <!-- /.info-box-content -->
                             </div>
                             <div class="form-group">
-                                <label>Cliente paga con:</label>
+                                <label>% de IVA</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">
-                                        <i class="fa fa-dollar"></i>
+                                        <i class="fa fa-line-chart"></i>
                                     </div>
-                                    <input th:id="pagaCon" type="text" class="form-control">
+                                    <input type="number"  min="0" max="100" th:id="iva" class="form-control">
                                 </div>
                             </div>
-                            <!--<div class="form-group">
+                            <div class="form-group">
                                 <label>Realizar Descuento:</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">
                                         <i class="fa fa-dollar"></i>
                                     </div>
-                                    <input th:id="descuento" type="text" class="form-control">
+                                    <input th:id="descuento" type="number" class="form-control">
                                 </div>
-                            </div>-->
+                            </div>
                             <div class="form-group">
-                                <label>El cambio es:</label>
+                                <label>Valido hasta:</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">
-                                        <i class="fa fa-dollar"></i>
+                                        <i class="fa fa-calendar-o"></i>
                                     </div>
-                                    <input th:id="cambio" type="text" class="form-control">
+                                    <input th:id="validation-date" type="text" class="form-control">
                                 </div>
                             </div>
                             <!-- /.info-box -->
                         </div>
                     </div>
                     <div class="modal-footer" style="background-color: #0a0a0a !important;">
-                        <button type="button" onclick="functionCambio()" class="btn btn-primary pull-right">CALCULAR CAMBIO</button>
-                        <button type="button" onclick="imprimirTicket()" class="btn btn-primary pull-left">Ticket</button>
+                        <button type="button" onclick="imprimirTicket()" class="btn btn-primary pull-left">IMPRIMIR</button>
                     </div>
+
+                    <!-- Formulario oculto -->
+                    <form id="imprimirForm" action="http://localhost:8284/admin/document/ticket/imprimir" method="post" target="_blank" style="display: none;">
+                        <input type="hidden" name="formIdPedido" id="formIdPedido">
+                        <input type="hidden" name="formIva" id="formIva">
+                        <input type="hidden" name="formdescuento" id="formdescuento">
+                        <input type="hidden" name="formvalidation" id="formvalidation">
+                    </form>
+
                 </div>
                 <!-- /.modal-content -->
             </div>
@@ -305,12 +317,19 @@
     </script>
 
     <script type="text/javascript">
+      $(document).ready(function() {
+          document.getElementById("ref").href = "http://"+location.hostname+":8284//admin/priceList";
+      });
+
+  </script>
+
+    <script type="text/javascript">
         var nombre = "";
         var precio = "";
+        var unidadNum = "";
         var cantidad = "";
         var idArt = "";
         var value = "";
-        var stockCorrect = 0;
         var totalApagar = 0;
         var numDiv = 0;
 
@@ -327,17 +346,15 @@
                 dataType: 'json',
                 success: function (result) {
 
-                    document.getElementById("descripcion").textContent ="Ingrese: '"+result.medida+"' total stock disponible: "+result.stock;
-                    nombre = result.nombre;
-                    document.getElementById("cantidadNum").max = result.stock;
-
                     if(result.precioVenta != null){
                         $('#precio').val(result.precioVenta);
+                        $('#unidadNum').val(result.unidad);
                     }else{
                         $('#precio').val(0);
+                        $('#unidadNum').val("");
                     }
                     idArt = result.id;
-                    stockCorrect = result.stock;
+                    nombre = result.nombre;
                 }
             });
         }
@@ -353,9 +370,9 @@
             $("#cargarCompra").click(function(){
 
                 precio = $('#precio').val();
+                unidadNum = $('#unidadNum').val();
 
                 if((idArt != "") && (precio != "") && (cantidad != "")){
-                    if(stockCorrect >= cantidad){
                         var total = precio * cantidad;
                         totalApagar = totalApagar + total;
                         $("#menu").append('<div id="div_'+idArt+'_'+numDiv+'" class="product-info">' +
@@ -365,16 +382,12 @@
                             '</a> ' +
                             '   <span class="product-description">'+cantidad+'*'+precio+' </span> ' +
                             '</div>');
-                        document.getElementById("totalApagarVenta").value = idArt+","+precio +","+ cantidad +","+numDiv ;
+                        document.getElementById("totalApagarVenta").value = idArt+","+precio +","+ cantidad +","+numDiv +","+unidadNum;
 
                         value = value + document.getElementById("totalApagarVenta").value + "]";
                         document.getElementById("totalApagarVenta").value = value;
                         document.getElementById("errorCargar").style.display = 'none';
                         numDiv++;
-                    }else{
-                        document.getElementById("message").innerHTML = "La cantidad es mayor que el Stock";
-                        document.getElementById("errorCargar").style.display = 'block';
-                    }
                 }else{
                     document.getElementById("message").innerHTML = "Error en alguno de los campos";
                     document.getElementById("errorCargar").style.display = 'block';
@@ -391,6 +404,7 @@
              nombre = "";
              precio = "";
              cantidad = "";
+             unidadNum = "";
         });
 
     </script>
@@ -404,20 +418,6 @@
                 $('#modal-default').modal('show');
             }
         });
-
-        function functionCambio(){
-            var totalVentaAmostrar = document.getElementById("totalVentaAmostrar").value;
-            var pagaCon = document.getElementById("pagaCon").value;
-            //var descuento = document.getElementById("descuento").value;
-            var descuento = 0;
-
-            if(descuento > 0){
-                var precioCondescuento = parseFloat(totalVentaAmostrar) - parseFloat(descuento);
-                document.getElementById("cambio").value = (parseFloat(pagaCon) - parseFloat(precioCondescuento));
-            }else{
-                document.getElementById("cambio").value = (parseFloat(pagaCon) - parseFloat(totalVentaAmostrar));
-            }
-        }
 
         function functionDeleteVenta(id) {
             var divID = id.split("_");
@@ -444,8 +444,21 @@
         }
         
         function imprimirTicket() {
+
             var id = document.getElementById("idPedido").value;
-            window.open('http://'+location.hostname+':8284/admin/document/ticket/imprimir/'+id, '_blank');
+            var iva = document.getElementById("iva").value;
+            var descuento = document.getElementById("descuento").value;
+            var validation = document.getElementById("validation-date").value;
+
+            // Rellenar el formulario oculto con los valores
+            document.getElementById("formIdPedido").value = id;
+            document.getElementById("formIva").value = iva;
+            document.getElementById("formdescuento").value = descuento;
+            document.getElementById("formvalidation").value = validation;
+
+            // Enviar el formulario
+            document.getElementById("imprimirForm").submit();
+
             document.getElementById("idPedido").value = 0;
         }
 

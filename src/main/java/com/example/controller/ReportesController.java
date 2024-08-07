@@ -1,11 +1,6 @@
 package com.example.controller;
 
-import com.example.model.Article;
-import com.example.model.Compra;
-import com.example.model.Negocio;
 import com.example.model.Venta;
-import com.example.service.ArticleService;
-import com.example.service.CompraService;
 import com.example.service.NegocioService;
 import com.example.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -26,13 +20,7 @@ import java.util.stream.Collectors;
 public class ReportesController {
 
     @Autowired
-    private CompraService compraService;
-
-    @Autowired
     private VentaService ventaService;
-
-    @Autowired
-    private ArticleService articleService;
 
     @Autowired
     private NegocioService negocioService;
@@ -44,81 +32,6 @@ public class ReportesController {
 
     DateFormat hourdateFormat = new SimpleDateFormat("MM");
     DateFormat hourdateFormatAnio = new SimpleDateFormat("yyyy");
-
-    @RequestMapping(value = "/admin/reportes", method = RequestMethod.GET)
-    public ModelAndView reportes() throws ParseException {
-        String fechaMes = hourdateFormat.format(new Date());
-        String fechaAnio = hourdateFormatAnio.format(new Date());
-
-        float gastosTotales = reportCompras(Integer.parseInt(fechaMes) , Integer.parseInt(fechaAnio));
-        float gananciasTotales = reportVentas(Integer.parseInt(fechaMes) , Integer.parseInt(fechaAnio));
-        float balance = gananciasTotales - gastosTotales;
-
-        //GANANCIAS TOTALES ANIO
-        float gastosTotalesAnio = reportCompras(-99, Integer.parseInt(fechaAnio));
-        float gananciasTotalesAnio = reportVentas(-99, Integer.parseInt(fechaAnio));
-        float balanceAnio = gananciasTotalesAnio - gastosTotalesAnio;
-        //-----
-
-        int articuloMasVendidoDelMes = getArticuloMasVendido(fechaMes, fechaAnio, MES, SINCANTIDAD);
-        int cantMasVendidoDelMes = getArticuloMasVendido(fechaMes, fechaAnio, MES, CANTIDAD);
-        Article articuloMes = articleService.findbyId(articuloMasVendidoDelMes);
-        String articuloNombre = articuloMes == null ? "Sin Ventas" : articuloMes.getNombre();
-
-        int articuloMasVendidoDelAnio = getArticuloMasVendido(fechaMes, fechaAnio, ANIO, SINCANTIDAD);
-        int cantMasVendidoDelAnio = getArticuloMasVendido(fechaMes, fechaAnio, ANIO, CANTIDAD);
-        Article articuloAnio = articleService.findbyId(articuloMasVendidoDelAnio);
-        String articuloAnioNombre = articuloAnio == null ? "Sin Ventas" : articuloAnio.getNombre();
-
-        Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
-        String moneda = "$";
-        if(negocio.isPresent() && negocio.get().getSimboloMoneda() != null){
-            moneda = negocio.get().getSimboloMoneda();
-        }
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("gastosTotales", gastosTotales);
-        modelAndView.addObject("gananciasTotales", gananciasTotales);
-        modelAndView.addObject("balance", balance);
-        modelAndView.addObject("articuloNombre", articuloNombre);
-        modelAndView.addObject("cantArticuloNombre", cantMasVendidoDelMes);
-        modelAndView.addObject("articuloAnioNombre", articuloAnioNombre);
-        modelAndView.addObject("cantAnioNombre", cantMasVendidoDelAnio);
-        modelAndView.addObject("gananciasTotalesAnio",gananciasTotalesAnio);
-        modelAndView.addObject("balanceAnio",balanceAnio);
-        modelAndView.addObject("gastosTotalesAnio",gastosTotalesAnio);
-        modelAndView.addObject("moneda",moneda);
-        modelAndView.setViewName("admin/report");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/report/compras/{mes}/{ano}", method = RequestMethod.GET)
-    @ResponseBody
-    public float reportCompras(@PathVariable("mes") int mes, @PathVariable("ano") int anio) {
-        List<Compra> listaCompras = compraService.findAll();
-        float total = 0;
-        try {
-            for (Compra compra : listaCompras) {
-                Date hourdateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").parse(compra.getFechaIngreso());
-                int mesCompra = hourdateFormat.getMonth() + 1;
-                int anioCompra = Integer.parseInt(hourdateFormatAnio.format(hourdateFormat));
-                if (mes == -99) {
-                    if (anioCompra == anio) {
-                        total = total + compra.getPrecioTotal();
-                    }
-                } else {
-                    if (mes == mesCompra && anioCompra == anio) {
-                        total = total + compra.getPrecioTotal();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            return 0;
-        }
-
-        return total;
-
-    }
 
     @RequestMapping(value = "/report/ventas/{mes}/{ano}", method = RequestMethod.GET)
     @ResponseBody
