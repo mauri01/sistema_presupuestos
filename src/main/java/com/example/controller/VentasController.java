@@ -5,6 +5,9 @@ import com.example.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,6 +24,10 @@ import java.util.stream.Collectors;
 
 @Controller
 public class VentasController {
+
+    @Autowired
+    private UserService userService;
+
     @Autowired
     private VentaService ventaService;
 
@@ -83,7 +90,8 @@ public class VentasController {
                 .collect(Collectors.toList()));
         modelAndView.setViewName("admin/index");
 
-        List<Price> priceList = priceListService.findExcelPrices("1.xlsx");
+        User user = getUserAuth();
+        List<Price> priceList = priceListService.findExcelPrices((long) user.getId());
         modelAndView.addObject("messageVenta", messageVenta);
         modelAndView.addObject("countVentas", countVentas);
         modelAndView.addObject("stockDisponible", stockDisponible);
@@ -239,5 +247,18 @@ public class VentasController {
             ventaPedidos.add(pedidoDetalle);
         }
         return ventaPedidos;
+    }
+
+    private User getUserAuth() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            username = userDetails.getUsername();
+
+        } else if (authentication != null) {
+            username = authentication.getPrincipal().toString();
+        }
+        return userService.findUserByEmail(username);
     }
 }

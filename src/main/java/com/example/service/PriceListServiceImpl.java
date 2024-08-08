@@ -38,8 +38,8 @@ public class PriceListServiceImpl implements PriceListService {
     }
 
     @Override
-    public List<Price> findExcelPrices(String name) throws IOException {
-        PriceList fileStorage = findByName(name);
+    public List<Price> findExcelPrices(Long userId) throws IOException {
+        PriceList fileStorage = findByUserId(userId);
 
         ByteArrayInputStream bis = new ByteArrayInputStream(fileStorage.getData());
         Workbook workbook = new XSSFWorkbook(bis);

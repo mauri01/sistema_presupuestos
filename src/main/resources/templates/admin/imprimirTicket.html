@@ -67,14 +67,14 @@
         <div th:if="${image}">
             <img th:src="'data:' + ${imageType} + ';base64,' + ${image}" alt="Logo" style="max-width: 100px;">
         </div>
+        <br th:unless="${image}">
+        <br th:unless="${image}">
         <p th:text="${negocio.nombre}"></p>
         <p th:text="${negocio.domicilio}"></p>
         <p th:text="${negocio.tel}"></p>
     </div>
-    <div class="title">
-        <h2>Presupuesto</h2>
-    </div>
     <div class="address">
+        <h2>Presupuesto</h2>
         <p th:text="${cliente.nombre}"></p>
         <p th:text="${cliente.domicilio}"></p>
         <p th:text="${cliente.tel}"></p>

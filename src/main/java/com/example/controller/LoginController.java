@@ -139,7 +139,7 @@ public class LoginController {
         PriceList priceListFromUser = priceListService.findByUserId((long) user.getId());
         List<Price> priceList = null;
         if (Objects.nonNull(priceListFromUser)) {
-            priceList = priceListService.findExcelPrices(priceListFromUser.getNameFile());
+            priceList = priceListService.findExcelPrices((long) user.getId());
         }
 
         countVentas = getCountVentasFecha(countVentas);
@@ -312,8 +312,7 @@ public class LoginController {
     @ResponseBody
     public Price articles(@PathVariable("id") int id) throws IOException {
         User user = getUserAuth();
-        PriceList priceListFromUser = priceListService.findByUserId((long) user.getId());
-        List<Price> priceList = priceListService.findExcelPrices(priceListFromUser.getNameFile());
+        List<Price> priceList = priceListService.findExcelPrices((long) user.getId());
         return priceList.stream().filter(price -> price.getId() == id).findFirst().orElse(null);
     }
 

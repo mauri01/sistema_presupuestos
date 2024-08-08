@@ -2,23 +2,15 @@ package com.example.controller;
 
 import com.example.model.*;
 import com.example.service.*;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -61,7 +53,8 @@ public class DocumentController {
         for (Venta venta : ventas) {
             DetalleVentaPedido detalleVenta = new DetalleVentaPedido();
             detalleVenta.setPrecioArticle(venta.getPrecio());
-            List<Price> priceList = priceListService.findExcelPrices("1.xlsx");
+            User user = getUserAuth();
+            List<Price> priceList = priceListService.findExcelPrices((long) user.getId());
             Price list = priceList.stream().filter(price -> price.getId() == venta.getArticle()).findFirst().orElse(null);
             detalleVenta.setNameArticle(list.getNombre());
             detalleVenta.setCantidad(venta.getCantidad());

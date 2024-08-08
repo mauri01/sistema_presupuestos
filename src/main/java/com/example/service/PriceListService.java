@@ -12,5 +12,5 @@ public interface PriceListService {
     PriceList findByName(String name);
     PriceList findByUserId(Long id);
     void save(PriceList priceList);
-    List<Price> findExcelPrices(String name) throws IOException;
+    List<Price> findExcelPrices(Long userId) throws IOException;
 }
