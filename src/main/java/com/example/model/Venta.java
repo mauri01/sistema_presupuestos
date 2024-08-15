@@ -32,6 +32,18 @@ public class Venta {
     @Column(name = "cliente_id", columnDefinition = "integer default 0")
     private int cliente;
 
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "iva")
+    private Long iva;
+
+    @Column(name = "descuento")
+    private Long descuento;
+
+    @Column(name = "total_venta")
+    private float totalVenta;
+
     public int getId() {
         return id;
     }
@@ -94,5 +106,37 @@ public class Venta {
 
     public void setCliente(int cliente) {
         this.cliente = cliente;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getIva() {
+        return iva;
+    }
+
+    public void setIva(Long iva) {
+        this.iva = iva;
+    }
+
+    public Long getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(Long descuento) {
+        this.descuento = descuento;
+    }
+
+    public float getTotalVenta() {
+        return totalVenta;
+    }
+
+    public void setTotalVenta(float totalVenta) {
+        this.totalVenta = totalVenta;
     }
 }

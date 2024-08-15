@@ -120,12 +120,36 @@
     </div>
 </div>
 <button id="oculto-impresion" class="oculto-impresion" onclick="imprimir()">Imprimir</button>
+<button id="oculto-impresion-wsp" onclick="capturarPantalla()">Capturar y compartir por WhatsApp</button>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script type="text/javascript">
     function imprimir() {
         document.getElementById("oculto-impresion").style.display = "none";
         window.print();
+    }
+
+    function capturarPantalla() {
+
+        document.getElementById("oculto-impresion").style.display = "none";
+        document.getElementById("oculto-impresion-wsp").style.display = "none";
+        setTimeout(function() {
+        html2canvas(document.body).then(canvas => {
+            // Convertir el canvas a una imagen en formato base64
+            const imagenBase64 = canvas.toDataURL("image/png");
+
+            // Crear un enlace de descarga para que el usuario guarde la imagen
+            const enlaceDescarga = document.createElement('a');
+            enlaceDescarga.href = imagenBase64;
+            enlaceDescarga.download = 'captura.png';
+            enlaceDescarga.click();
+
+            // Abrir WhatsApp Web para que el usuario adjunte la imagen manualmente
+            const mensaje = "Envio el presupuesto requerido:";
+            const enlaceWhatsAppWeb = `https://web.whatsapp.com/send?text=${encodeURIComponent(mensaje)}`;
+            window.open(enlaceWhatsAppWeb, '_blank');
+        });
+        }, 100);
     }
 </script>
 

@@ -56,6 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/admin/faq").permitAll()
 				.antMatchers("/admin/priceList").permitAll()
 				.antMatchers("/upload-price").permitAll()
+				.antMatchers("/admin/presupuestos").permitAll()
 				.antMatchers("/admin/document/ticket/imprimir/**").permitAll()
 				.antMatchers("/admin/cliente").permitAll()
 				.antMatchers("/admin/cliente/**").permitAll()

@@ -3,8 +3,6 @@ package com.example.controller;
 import com.example.model.*;
 import com.example.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +14,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -103,36 +98,14 @@ public class VentasController {
         return modelAndView;
     }
 
-    private int getCountVentasFecha(int countVentas) throws ParseException {
-        DateFormat hourdateFormat = new SimpleDateFormat("MM");
-        String fechaMes = hourdateFormat.format(new Date());
-        DateFormat hourdateFormatAnio = new SimpleDateFormat("yyyy");
-        String fechaAnio = hourdateFormatAnio.format(new Date());
-
-        int idPedido = 0;
-        List<Venta> listVentas = ventaService.findAll();
-
-        for (Venta venta : listVentas){
-            if(venta.getPedido() != idPedido){
-                Date dateVenta = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").parse(venta.getFechaVenta());
-                String fechaMesVenta = hourdateFormat.format(dateVenta);
-                String fechaAnioVenta = hourdateFormatAnio.format(dateVenta);
-
-                if(fechaMes.equals(fechaMesVenta) && fechaAnio.equals(fechaAnioVenta)){
-                    countVentas++;
-                }
-                idPedido = venta.getPedido();
-            }
-        }
-        return countVentas;
-    }
-
     private int registrarCompra(String idArt, String precio, String cantidad, int idPedido, String fecha, String clienteID, String unidad) {
         Venta venta = new Venta();
         venta.setArticle(Integer.parseInt(idArt));
         venta.setCantidad(Integer.parseInt(cantidad));
         venta.setUnidad(unidad);
         venta.setPrecio(Float.parseFloat(precio));
+        User user = getUserAuth();
+        venta.setUserId((long) user.getId());
         if(!clienteID.equals("")){
             venta.setCliente(Integer.parseInt(clienteID));
         }
@@ -154,71 +127,6 @@ public class VentasController {
 
         ventaService.saveVenta(venta);
         return venta.getPedido();
-    }
-
-    @RequestMapping(value="/admin/ventas-list", method = RequestMethod.GET)
-    public ModelAndView stockList() throws ParseException {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("admin/ventaList");
-
-        DateFormat hourdateFormat = new SimpleDateFormat("MM");
-        String fechaMes = hourdateFormat.format(new Date());
-        DateFormat hourdateFormatAnio = new SimpleDateFormat("yyyy");
-        String fechaAnio = hourdateFormatAnio.format(new Date());
-
-        List<Venta> listVentas = ventaService.findAll();
-        List<VentasMesModel> ventasTotales = new ArrayList<>();
-
-        for (Venta venta : listVentas){
-            Date dateVenta = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").parse(venta.getFechaVenta());
-            String fechaMesVenta = hourdateFormat.format(dateVenta);
-            String fechaAnioVenta = hourdateFormatAnio.format(dateVenta);
-            if(fechaMes.equals(fechaMesVenta) && fechaAnio.equals(fechaAnioVenta)){
-                int pedido = venta.getPedido();
-                Optional<VentasMesModel> existePedido = ventasTotales.stream()
-                        .filter(ventasMesModel -> ventasMesModel.getIdPedido() == pedido).findAny();
-
-                if(!existePedido.isPresent()){
-                    List<Venta> ventasMes = listVentas.stream()
-                                                .filter(ven -> (pedido == ven.getPedido())).collect(Collectors.toList());
-
-                    obtenerVentaPorPedido(ventasTotales, pedido, ventasMes);
-                }
-
-            }
-        }
-
-        Optional<Negocio> negocio = negocioService.findAll().stream().findFirst();
-        String moneda = "$";
-        if(negocio.isPresent() && negocio.get().getSimboloMoneda() != null){
-            moneda = negocio.get().getSimboloMoneda();
-        }
-
-        modelAndView.addObject("moneda",moneda);
-        modelAndView.addObject("listaVentasTotales", ventasTotales);
-        return modelAndView;
-    }
-
-    private void obtenerVentaPorPedido(List<VentasMesModel> ventasTotales, int pedido, List<Venta> ventasMes) {
-        float cantidadPrecioTotal = 0;
-        String fechaVenta = "";
-        int cantidadArticulos = 0;
-        String nombreCliente = "";
-        for (Venta ventaTotal : ventasMes){
-            float cantidadPrecio = ventaTotal.getCantidad() * ventaTotal.getPrecio();
-            cantidadPrecioTotal = cantidadPrecioTotal+cantidadPrecio;
-            fechaVenta = ventaTotal.getFechaVenta();
-            cantidadArticulos = cantidadArticulos+ventaTotal.getCantidad();
-            Cliente cliente = clienteService.findbyId(ventaTotal.getCliente());
-            nombreCliente = cliente == null ? "Sin registro" : cliente.getNombre()+"("+cliente.getNumDocumento()+")";
-        }
-        VentasMesModel ventasMesModel = new VentasMesModel();
-        ventasMesModel.setVentaTotalPrecio(cantidadPrecioTotal);
-        ventasMesModel.setIdPedido(pedido);
-        ventasMesModel.setFechaVenta(fechaVenta);
-        ventasMesModel.setCantidadArticulos(cantidadArticulos);
-        ventasMesModel.setCliente(nombreCliente);
-        ventasTotales.add(ventasMesModel);
     }
 
     @RequestMapping(value="/venta/pedido/{id}", method = RequestMethod.GET)
@@ -260,5 +168,63 @@ public class VentasController {
             username = authentication.getPrincipal().toString();
         }
         return userService.findUserByEmail(username);
+    }
+
+    @RequestMapping(value="/admin/presupuestos", method = RequestMethod.GET)
+    public ModelAndView listaPresupuestos(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/presupuestos");
+        User user = getUserAuth();
+
+        Map<Integer, List<Venta>> presupuestosByPedido = ventaService.findAll().stream()
+                .filter(venta -> venta.getUserId() == user.getId())
+                .collect(Collectors.groupingBy(Venta::getPedido));
+
+        List<DetallePresupuesto> detallePresupuestos = new ArrayList<>();
+        for (Map.Entry<Integer, List<Venta>> entry : presupuestosByPedido.entrySet()) {
+            Integer idVenta = entry.getKey();
+            List<Venta> ventas = entry.getValue();
+            float sumaTotal = 0;
+            for (Venta venta : ventas){
+                int cantidad = venta.getCantidad();
+                float precio = venta.getPrecio();
+                sumaTotal = sumaTotal + (cantidad * precio);
+            }
+            
+            Optional<Venta> datosVenta = ventas.stream().findFirst();
+            if (datosVenta.isPresent()) {
+                Long descuento = datosVenta.get().getDescuento();
+                if (descuento != null) {
+                    sumaTotal = sumaTotal - descuento;
+                }
+                Long iva = datosVenta.get().getIva();
+                if (iva != null) {
+                    sumaTotal = sumaTotal * (iva / 100);
+                }
+                int clienteID = datosVenta.get().getCliente();
+                String nombreCliente = "-";
+                String telefono = "-";
+                if (clienteID > 0) {
+                    Cliente datosCliente = clienteService.findbyId(clienteID);
+                    nombreCliente = datosCliente.getNombre();
+                    telefono = datosCliente.getTel();
+                }
+
+                String fecha = datosVenta.get().getFechaVenta();
+                DetallePresupuesto detalle = DetallePresupuesto.builder()
+                        .iva(iva != null ? iva : 0)
+                        .descuento(descuento != null ? descuento : 0)
+                        .nombreCliente(nombreCliente)
+                        .total(sumaTotal)
+                        .tel(telefono)
+                        .fechaVenta(fecha)
+                        .build();
+                detallePresupuestos.add(detalle);
+            }
+        }
+
+
+        modelAndView.addObject("presupuestos", detallePresupuestos);
+        return modelAndView;
     }
 }

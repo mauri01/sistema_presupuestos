@@ -265,12 +265,20 @@ public class LoginController {
                 fileName = fileName.substring(0, 255);
             }
 
-            PriceList fileStorage = new PriceList();
-            fileStorage.setUserId(userId);
-            fileStorage.setData(file.getBytes());
-            fileStorage.setNameFile(fileName);
+            User user = getUserAuth();
+            PriceList priceListFromUser = priceListService.findByUserId((long) user.getId());
 
-            priceListService.save(fileStorage);
+            if (priceListFromUser != null) {
+                priceListFromUser.setData(file.getBytes());
+                priceListFromUser.setNameFile(fileName);
+                priceListService.save(priceListFromUser);
+            } else {
+                PriceList fileStorage = new PriceList();
+                fileStorage.setUserId(userId);
+                fileStorage.setData(file.getBytes());
+                fileStorage.setNameFile(fileName);
+                priceListService.save(fileStorage);
+            }
 
         } catch (IOException e) {
             modelAndView.addObject("error", "Error guardando el archivo, error:" + e.getMessage());

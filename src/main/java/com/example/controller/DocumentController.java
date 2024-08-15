@@ -61,6 +61,10 @@ public class DocumentController {
             detalleVenta.setUnidad(venta.getUnidad());
             detalleVentaPedidos.add(detalleVenta);
             totalVenta = totalVenta + venta.getCantidad() * venta.getPrecio();
+            venta.setDescuento(formdescuento);
+            venta.setTotalVenta(totalVenta);
+            venta.setIva(formIva);
+            ventaService.saveVenta(venta);
         }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("articles", detalleVentaPedidos);
